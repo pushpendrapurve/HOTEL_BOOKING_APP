@@ -33,7 +33,7 @@ const clerkWebhooks = async(req,res)=>{
                 break;
             }
 
-            case "user.updatedd":{
+            case "user.updated":{
                 await User.findByIdAndUpdate(data.id, userData)
                 break;
             }

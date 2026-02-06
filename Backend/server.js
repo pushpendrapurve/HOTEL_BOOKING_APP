@@ -1,30 +1,24 @@
-import express from 'express'
-import dotenv from 'dotenv/config'
-import cors from 'cors'
-import connectDB from './configs/db.js';
-import {clerkMiddleware} from '@clerk/express'
-import clerkWebhooks from './controllers/clerkWebhooks.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./configs/db.js";
+import authRoutes from "./routes/authRouter.js";
 
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-//database connection
+dotenv.config();
 connectDB();
 
-// app.use(express.json()) 
+const app = express();
+
 app.use(cors());
-// app.use(clerkMiddleware());
+app.use(express.json());
 
-// API to listen to clerk Webhook
-app.use("/api/clerk", clerkWebhooks);
- 
+// routes
+app.use("/api/auth", authRoutes);
 
-app.get('/',(req,res)=>{
-    res.send('API is Working!')
-})
- 
-app.listen(PORT,()=>{
-    console.log(`server is listening on port http://localhost:${PORT}`)
+app.get("/", (req, res) => {
+  res.send("API is running...");
 });
 
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -102,6 +102,7 @@ export const AppProvider = ({ children }) => {
     setUser,
     rooms,
     setRooms,
+    toast
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

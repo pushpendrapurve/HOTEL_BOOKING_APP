@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const navLinks = [
@@ -13,19 +14,10 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const [user, setUser] = useState(null);
-
-  const navigate = useNavigate();
+  const {user,setUser, navigate, isOwner, setShowHotelReg} = useAppContext();
+  
   const location = useLocation();
 
-  // Load user from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, [location.pathname]);
 
   // Scroll Effect
   useEffect(() => {
@@ -49,6 +41,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("isOwner");
     setUser(null);
     navigate("/");
   };
@@ -89,14 +82,15 @@ const Navbar = () => {
           </Link>
         ))}
 
-        <button
+        {user && (<button
           className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
             isScrolled ? "text-black" : "text-white"
           } transition-all`}
-          onClick={() => navigate("/owner")}
+          onClick={() => isOwner? navigate("/owner") : setShowHotelReg(true)}
         >
-          Dashboard
-        </button>
+         {isOwner? "Dashboard" : "List Your Hotel"}
+        </button>)}
+
       </div>
 
       {/* Desktop Right */}
@@ -198,11 +192,11 @@ const Navbar = () => {
         <button
           className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all"
           onClick={() => {
-            setIsMenuOpen(false);
-            navigate("/owner");
+            // setIsMenuOpen(false);
+           isOwner? navigate("/owner") : setShowHotelReg(true)
           }}
         >
-          Dashboard
+           {isOwner? "Dashboard" : "List Your Hotel"}
         </button>
 
         {/* Login OR Logout */}

@@ -57,8 +57,8 @@ const LoginRegisterModal = () => {
       setLoading(true);
 
       const url = isLogin
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`
+        : `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`;
 
       const payload = isLogin
         ? {
@@ -85,22 +85,19 @@ const LoginRegisterModal = () => {
         return;
       }
 
-      // ✅ Store Token + User in LocalStorage
+      // Store Token + User in LocalStorage
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
 
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
-      } else {
-        // fallback if backend is not sending user
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            name: formData.name || "User",
-            email: formData.email,
-          })
-        );
+
+        if (data.user.role === "hotelOwner") {
+          localStorage.setItem("isOwner", "true");
+        } else {
+          localStorage.setItem("isOwner", "false");
+        }
       }
 
       setMessage(data.message || "Success!");
@@ -115,12 +112,13 @@ const LoginRegisterModal = () => {
 
       setLoading(false);
 
-      // ✅ Redirect immediately
+      // Redirect immediately
       navigate("/");
 
-      // ✅ Navbar refresh (temporary solution)
+      //Navbar refresh (temporary solution)
       window.location.reload();
     } catch (err) {
+      console.log(err);
       setError("Server error! Please try again.");
       setLoading(false);
     }
@@ -282,8 +280,8 @@ const LoginRegisterModal = () => {
               {loading
                 ? "Please wait..."
                 : isLogin
-                ? "Continue →"
-                : "Register →"}
+                  ? "Continue →"
+                  : "Register →"}
             </button>
           </form>
 

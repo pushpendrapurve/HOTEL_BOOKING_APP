@@ -14,6 +14,7 @@ import ListRoom from './pages/hotelOwner/ListRoom';
 import LoginRegisterModal from './pages/LoginRegisterModal';
 import {Toaster} from 'react-hot-toast'
 import { useAppContext } from './context/AppContext';
+import Loader from './components/Loader';
 
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/rooms' element={<AllRooms/>}/>
         <Route path='/rooms/:id' element={<RoomDetails/>}/>
         <Route path='/my-bookings' element={<MyBookings/>}/>
+        <Route path='/loader/:nextUrl' element={<Loader/>}/>
         <Route path='/login' element={<LoginRegisterModal/>}/>
         <Route path='/register' element={<LoginRegisterModal/>}/>
         <Route path='/owner' element={<Layout/>}>

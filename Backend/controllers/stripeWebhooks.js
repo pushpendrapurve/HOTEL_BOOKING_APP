@@ -1,38 +1,40 @@
-import stripe from "stripe";
-import Booking from "../models/Booking.js";
+import stripe from 'stripe'
+import Booking from '../models/Booking.js';
 
-export const stripeWebhooks = async (req, res) => {
+//API to handle stripe Webhooks
+export const stripeWebhooks = async (request, response)=>{
+  console.log("hello");
+    //stripe gateway initialization
+    const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+    const sig = request.headers['stripe-signature'];
+    let event;
 
-  const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
-  const sig = req.headers["stripe-signature"];
+    try {
+        event = stripeInstance.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+        
+    } catch (err) {
+        console.log(err)
+        response.status(400).send(`Webhook Error: ${err.message}`)
+    }
 
-  let event;
+    // Handle the event
 
-  try {
-    event = stripeInstance.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.log("Webhook Error:", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    if(event.type === "payment_intent.succeeded"){
+        const paymentIntent = event.data.object;
+        const paymentIntentId = paymentIntent.id;
 
-  // ✅ Correct event type for Checkout
-  if (event.type === "checkout.session.completed") {
+        //getting session metadata
+        const session = await stripeInstance.checkout.sessions.list({
+            payment_intent: paymentIntentId,
+        });
 
-    const session = event.data.object;
+        const{bookingId} = session.data[0].metadata;
 
-    const bookingId = session.metadata.bookingId;
+        //Mark Payment as Paid
+        await Booking.findByIdAndUpdate(bookingId,{isPaid: true,paymentMethod: "Stripe"})
 
-    await Booking.findByIdAndUpdate(bookingId, {
-      isPaid: true,
-      paymentMethod: "Stripe",
-    });
-
-    console.log("Booking marked as paid:", bookingId);
-  }
-
-  res.json({ received: true });
-};
+    }else{
+        console.log("Unhandled event type :", event.type)
+    }
+    response.json({received: true});
+}

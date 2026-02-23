@@ -17,10 +17,10 @@ connectClodinary();
 const app = express();
 
 app.use(cors());
+app.post('/api/stripe', express.raw({type: "application/json"}),stripeWebhooks)
 app.use(express.json());
 
 // routes
-app.post('/api/stripe', express.raw({type: "application/json"}),stripeWebhooks)
 //login/register router
 app.use("/api/auth", authRoutes);
 

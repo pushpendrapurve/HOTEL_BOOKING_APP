@@ -157,27 +157,33 @@ export const stripePayment = async (req, res)=>{
 
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
+    // Ensure amount is an integer (in paise for INR)
+    const amountInPaise = Math.round(totalPrice * 100);
+
     const line_items = [
       { 
         price_data:{
           currency: "inr",
           product_data:{
             name: roomData.hotel.name,
+            description: `Booking for ${roomData.roomType}`,
           },
-          unit_amount: totalPrice * 100
+          unit_amount: amountInPaise
         },
-        quantity:1,
+        quantity: 1,
       }
     ]
 
     const session = await stripeInstance.checkout.sessions.create({
       line_items,
       mode: "payment",
+      payment_method_types: ['card'],
       success_url: `${origin}/loader/my-bookings`,
       cancel_url: `${origin}/my-bookings`,
       metadata:{
         bookingId,
-      }
+      },
+      locale: 'en', // Set locale to prevent automatic currency conversion
     })
     res.json({success: true,url: session.url})
 

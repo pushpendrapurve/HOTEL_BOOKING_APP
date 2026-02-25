@@ -37,6 +37,56 @@ const AddRoom = () => {
         }
     }, [user, token, isOwner, navigate]);
 
+    // Compress image function
+    const compressImage = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Resize if too large
+                    const MAX_WIDTH = 1920;
+                    const MAX_HEIGHT = 1080;
+                    
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convert to blob with compression
+                    canvas.toBlob(
+                        (blob) => {
+                            resolve(new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now(),
+                            }));
+                        },
+                        'image/jpeg',
+                        0.7 // 70% quality
+                    );
+                };
+            };
+        });
+    };
+
     const onSubmitHandler =async (e) =>{
         e.preventDefault();
         // check if all inputs are filled
@@ -47,22 +97,31 @@ const AddRoom = () => {
 
         setLoading(true);
         try {
+            toast.loading('Compressing images...');
+            
             const formData = new FormData()
             formData.append('roomType', inputs.roomType)
             formData.append('pricePerNight', inputs.pricePerNight)
 
             // Converting Amenities to Array & Keeping only enabled Amenities
-
             const amenities = Object.keys(inputs.amenities).filter(key => inputs.amenities[key])
             formData.append('amenities',JSON.stringify(amenities))
 
-            // Adding Images to FormData
-            Object.keys(images).forEach((key)=>{
-               images[key] && formData.append('images', images[key]) 
-            })
+            // Compress and add images to FormData
+            for (const key of Object.keys(images)) {
+                if (images[key]) {
+                    const compressedImage = await compressImage(images[key]);
+                    formData.append('images', compressedImage);
+                }
+            }
+            
+            toast.dismiss();
+            toast.loading('Uploading room...');
 
             const {data} = await axios.post('/api/rooms', formData, {headers: {Authorization: `Bearer ${token}`}})
 
+            toast.dismiss();
+            
             if(data.success){
                 toast.success(data.message)
                 setInputs({
@@ -81,6 +140,7 @@ const AddRoom = () => {
                toast.error(data.message) 
             }
         } catch (error) {
+            toast.dismiss();
             console.error('Error adding room:', error);
             if (error.response) {
                 // Server responded with error
@@ -103,6 +163,7 @@ const AddRoom = () => {
 
     {/* Upload Area For Images */}
     <p className='text-gray-800 mt-10'>Images</p>
+    <p className='text-sm text-gray-500 mb-2'>Images will be automatically compressed for faster upload</p>
     <div className='grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap'>
         {Object.keys(images).map((key)=>(
             <label htmlFor={`roomImage${key}`} key={key}>

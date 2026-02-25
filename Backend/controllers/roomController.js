@@ -5,10 +5,23 @@ import Room from "../models/Room.js";
 //API to create a new room for hotel
 export const createRoom = async(req,res)=>{
     try {
+        console.log('Creating room - User:', req.user?._id);
+        console.log('Request body:', req.body);
+        console.log('Files:', req.files?.length);
+        
         const {roomType, pricePerNight,amenities} = req.body;
         const hotel = await Hotel.findOne({owner : req.user._id})
 
-        if(!hotel) return res.json({success: false, message: "No Hotel found"});
+        if(!hotel) {
+            console.log('No hotel found for user:', req.user._id);
+            return res.json({success: false, message: "No Hotel found. Please register your hotel first."});
+        }
+
+        console.log('Hotel found:', hotel._id);
+
+        if(!req.files || req.files.length === 0) {
+            return res.json({success: false, message: "Please upload at least one image"});
+        }
 
         //upload images to cloudinary
         const uploadImages = req.files.map(async(file)=>{
@@ -18,6 +31,7 @@ export const createRoom = async(req,res)=>{
 
         //wait for all uploads to complete
         const images = await Promise.all(uploadImages)
+        console.log('Images uploaded:', images.length);
 
         await Room.create({
             hotel: hotel._id,
@@ -27,10 +41,11 @@ export const createRoom = async(req,res)=>{
             images,
         })
 
-
+        console.log('Room created successfully');
         res.json({success:true, message: "Room created successfully"})
  
     } catch (error) {
+        console.error('Error creating room:', error);
         res.json({success:false, message: error.message})
     }
 }

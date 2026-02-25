@@ -61,7 +61,7 @@ const AddRoom = () => {
                images[key] && formData.append('images', images[key]) 
             })
 
-            const {data} = await axios.post('/api/rooms/', formData, {headers: {Authorization: `Bearer ${token}`}})
+            const {data} = await axios.post('/api/rooms', formData, {headers: {Authorization: `Bearer ${token}`}})
 
             if(data.success){
                 toast.success(data.message)
@@ -81,7 +81,17 @@ const AddRoom = () => {
                toast.error(data.message) 
             }
         } catch (error) {
-            toast.error(error.message)
+            console.error('Error adding room:', error);
+            if (error.response) {
+                // Server responded with error
+                toast.error(error.response.data.message || 'Failed to add room');
+            } else if (error.request) {
+                // Request made but no response
+                toast.error('Network error: Unable to reach server. Please check if backend is running.');
+            } else {
+                // Other errors
+                toast.error(error.message || 'Failed to add room');
+            }
         }finally{
             setLoading(false);
         }

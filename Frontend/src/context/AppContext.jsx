@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -12,6 +12,7 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY || "₹";
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(
   JSON.parse(localStorage.getItem("user")) || null
 );
@@ -62,6 +63,8 @@ export const AppProvider = ({ children }) => {
   };
 
   const fetchUser = async () => {
+    if (!token) return; // Don't fetch if no token
+    
     try {
       const { data } = await axios.get("/api/user", {
         headers: { Authorization: `Bearer ${token}` },
@@ -84,10 +87,10 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && token) {
       fetchUser();
     }
-  }, [user]);
+  }, [user, token]);
 
   useEffect(() => {
     fetchRooms();

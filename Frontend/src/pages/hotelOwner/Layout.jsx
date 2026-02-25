@@ -5,12 +5,19 @@ import { Outlet } from 'react-router-dom'
 import { useAppContext } from '../../context/AppContext'
 
 const Layout = () => {
-  const {isOwner, navigate} = useAppContext();
+  const {isOwner, navigate, user} = useAppContext();
+  
   useEffect(() => {
-   if(!isOwner){
-    navigate('/')
-   }
-  }, [isOwner])
+    // Only redirect if user is loaded and is not an owner
+    if (user && !isOwner) {
+      navigate('/');
+    }
+  }, [isOwner, user, navigate]);
+  
+  // Show loading or nothing while checking owner status
+  if (!user) {
+    return null;
+  }
   
   return (
     <div className='flex flex-col h-screen'>

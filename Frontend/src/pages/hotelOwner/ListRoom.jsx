@@ -5,7 +5,17 @@ import toast from "react-hot-toast";
 
 const ListRoom = () => {
   const [rooms, setRooms] = useState([]);
-  const {axios, token, user, currency} = useAppContext()
+  const [editingRoom, setEditingRoom] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const {axios, token, user, currency, navigate, isOwner} = useAppContext()
+
+  // Check authentication
+  React.useEffect(() => {
+    if (!user || !token || !isOwner) {
+      toast.error('Please login as hotel owner to access this page');
+      navigate('/login');
+    }
+  }, [user, token, isOwner, navigate]);
 
   // Fetch Rooms of the Hotel Owner
   const fetchRooms = async()=>{
@@ -34,6 +44,28 @@ const ListRoom = () => {
       toast.error(data.message)
     }
    }
+
+   // Delete room
+   const handleDeleteRoom = async (roomId) => {
+     if (!window.confirm("Are you sure you want to delete this room?")) {
+       return;
+     }
+
+     try {
+       const { data } = await axios.delete(`/api/rooms/${roomId}`, {
+         headers: { Authorization: `Bearer ${token}` }
+       });
+
+       if (data.success) {
+         toast.success(data.message);
+         fetchRooms();
+       } else {
+         toast.error(data.message);
+       }
+     } catch (error) {
+       toast.error(error.message);
+     }
+   };
 
   useEffect(() => {
     if(user){
@@ -66,6 +98,9 @@ const ListRoom = () => {
               <th className="py-3 px-4 text-gray-800 font-medium text-center">
                 Actions
               </th>
+              <th className="py-3 px-4 text-gray-800 font-medium text-center">
+                Manage
+              </th>
             </tr>
           </thead>
 
@@ -87,6 +122,14 @@ const ListRoom = () => {
                     <div className="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
                     <span className="dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
                   </label>
+                </td>
+                <td className="py-3 px-4 border-t border-gray-300 text-center">
+                  <button
+                    onClick={() => handleDeleteRoom(item._id)}
+                    className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-all"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

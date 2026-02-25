@@ -11,6 +11,7 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
       room,
       checkInDate: { $lte: checkOutDate },
       checkOutDate: { $gte: checkInDate },
+      status: { $ne: "cancelled" }, // Exclude cancelled bookings
     });
     const isAvailable = bookings.length === 0;
     return isAvailable;
@@ -87,7 +88,7 @@ export const createBooking = async (req, res) => {
                     <li><strong>Hotel Name:</strong> ${roomData.hotel.name}</li>
                     <li><strong>Location:</strong> ${roomData.hotel.address}</li>
                     <li><strong>Date:</strong> ${booking.checkInDate.toDateString()}</li>
-                    <li><strong>Booking Amount:</strong> ${process.env.CURRENCY || "$"} ${booking.totalPrice} /night</li>
+                    <li><strong>Booking Amount:</strong> ${process.env.CURRENCY || "₹"} ${booking.totalPrice} /night</li>
                </ul>
                <p>We look forward to welcome you!</p>
                <p>If you need to make any changes, feel free to contack us.</p>
@@ -159,7 +160,7 @@ export const stripePayment = async (req, res)=>{
     const line_items = [
       { 
         price_data:{
-          currency: "usd",
+          currency: "inr",
           product_data:{
             name: roomData.hotel.name,
           },
@@ -185,3 +186,35 @@ export const stripePayment = async (req, res)=>{
     res.json({success: false,message: "Payment Failed"})
   }
 }
+
+
+// API to cancel a booking
+// POST /api/bookings/cancel
+export const cancelBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+    const user = req.user._id;
+
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.json({ success: false, message: "Booking not found" });
+    }
+
+    if (booking.user.toString() !== user.toString()) {
+      return res.json({ success: false, message: "Unauthorized" });
+    }
+
+    if (booking.status === "cancelled") {
+      return res.json({ success: false, message: "Booking already cancelled" });
+    }
+
+    booking.status = "cancelled";
+    await booking.save();
+
+    res.json({ success: true, message: "Booking cancelled successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Failed to cancel booking" });
+  }
+};

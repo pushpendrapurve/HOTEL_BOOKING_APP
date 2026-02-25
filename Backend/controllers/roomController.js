@@ -76,3 +76,69 @@ export const toggleRoomAvailability = async(req,res)=>{
     res.json({success: false,message: error.message})
   }
 } 
+
+// API to update a room
+// PUT /api/rooms/:roomId
+export const updateRoom = async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const { roomType, pricePerNight, amenities } = req.body;
+
+    const room = await Room.findById(roomId).populate("hotel");
+    if (!room) {
+      return res.json({ success: false, message: "Room not found" });
+    }
+
+    // Check if the user is the owner of the hotel
+    if (room.hotel.owner.toString() !== req.user._id.toString()) {
+      return res.json({ success: false, message: "Unauthorized" });
+    }
+
+    // Update room details
+    if (roomType) room.roomType = roomType;
+    if (pricePerNight) room.pricePerNight = +pricePerNight;
+    if (amenities) room.amenities = JSON.parse(amenities);
+
+    // Upload new images if provided
+    if (req.files && req.files.length > 0) {
+      const uploadImages = req.files.map(async (file) => {
+        const response = await cloudinary.uploader.upload(file.path);
+        return response.secure_url;
+      });
+      const newImages = await Promise.all(uploadImages);
+      room.images = newImages;
+    }
+
+    await room.save();
+
+    res.json({ success: true, message: "Room updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to delete a room
+// DELETE /api/rooms/:roomId
+export const deleteRoom = async (req, res) => {
+  try {
+    const { roomId } = req.params;
+
+    const room = await Room.findById(roomId).populate("hotel");
+    if (!room) {
+      return res.json({ success: false, message: "Room not found" });
+    }
+
+    // Check if the user is the owner of the hotel
+    if (room.hotel.owner.toString() !== req.user._id.toString()) {
+      return res.json({ success: false, message: "Unauthorized" });
+    }
+
+    await Room.findByIdAndDelete(roomId);
+
+    res.json({ success: true, message: "Room deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};

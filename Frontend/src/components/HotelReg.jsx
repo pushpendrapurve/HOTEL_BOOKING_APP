@@ -4,7 +4,7 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 
 const HotelReg = () => {
-  const { setShowHotelReg, axios, token, setIsOwner} = useAppContext();
+  const { setShowHotelReg, axios, token, setIsOwner, refreshOwnerStatus} = useAppContext();
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
@@ -17,9 +17,9 @@ const HotelReg = () => {
 
         if(data.success){
             toast.success(data.message)
-            setIsOwner(true)
-            localStorage.setItem("isOwner", "true"); 
             setShowHotelReg(false);
+            // Refresh owner status to reflect the new hotel
+            await refreshOwnerStatus();
         }else{
             toast.error(data.message)
         }

@@ -45,10 +45,10 @@ const AllRooms = () => {
   const roomTypes = ["Single Bed", "Double Bed", "Luxury Bed", "Family Suite"];
 
   const priceRanges = [
-    "0 to 500",
-    "500 to 1000",
-    "1000 to 2000",
-    "2000 to 3000",
+    "1000 to 3000",
+    "3000 to 5000", 
+    "5000 to 8000",
+    "8000 to 12000",
   ];
 
   const sortOptions = [
@@ -147,11 +147,10 @@ const AllRooms = () => {
             className="font-playfair text-4xl md
             text-[40px]"
           >
-            Hotel Rooms
+            Hotels in India
           </h1>
           <p className="text-sm md:text-base text-gray-500/90 mt-2">
-            Take advantage of our limited-time offers and special packages to
-            enhance your stay and create unforgettable memories.
+            Discover amazing hotels across India's most beautiful destinations. From heritage palaces to modern luxury resorts, find your perfect stay.
           </p>
         </div>
 
@@ -177,8 +176,8 @@ const AllRooms = () => {
                 {room.hotel.name}
               </p>
               <div className="flex items-center">
-                <StarRating />
-                <p className="ml-2">200+ reviews</p>
+                <StarRating rating={4} />
+                <p className="ml-2">Reviews</p>
               </div>
               <div className="flex items-center gap-1 text-gray-500 mt-2 text-sm">
                 <img src={assets.locationIcon} alt="location-Icon" />
@@ -202,7 +201,7 @@ const AllRooms = () => {
               </div>
               {/* Room Price per Night */}
               <p className="text-xl font-medium text-gray-700">
-                ${room.pricePerNight} /night
+                ₹{room.pricePerNight} /night
               </p>
             </div>
           </div>

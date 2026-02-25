@@ -35,9 +35,34 @@ const MyBookings = () => {
     }
   }
 
+  const handleCancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) {
+      return;
+    }
+
+    try {
+      const { data } = await axios.post('/api/bookings/cancel', { bookingId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (data.success) {
+        toast.success(data.message);
+        fetchUserBookings(); // Refresh bookings
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   useEffect(() => {
    if(user){
     fetchUserBookings()
+   } else if (user === null) {
+     // User is not logged in, redirect to login
+     toast.error('Please login to view your bookings');
+     navigate('/login');
    }
   }, [user])
   
@@ -81,7 +106,7 @@ const MyBookings = () => {
                   <img src={assets.guestsIcon} alt="guests-icon" />
                   <span>{booking.guests}</span>
                 </div>
-                <p className="text-base">Total: ${booking.totalPrice}</p>
+                <p className="text-base">Total: ₹{booking.totalPrice}</p>
               </div>
             </div>
             {/* Date & Time */}
@@ -100,16 +125,36 @@ const MyBookings = () => {
               </div>
             </div>
             {/* Payment status */}
-            <div className="flex flex-col items-start justify-center pt-3">
+            <div className="flex flex-col items-start justify-center pt-3 gap-2">
               <div className="flex items-center gap-2">
-                <div className={`h-3 w-3 rounded-full ${booking.isPaid ? "bg-green-500" : "bg-red-500"}`}>  
+                <div className={`h-3 w-3 rounded-full ${
+                  booking.status === 'cancelled' ? 'bg-gray-500' :
+                  booking.isPaid ? "bg-green-500" : "bg-red-500"
+                }`}>  
                 </div>
-                <p className={`text-sm ${booking.isPaid ? "text-green-500" : "text-red-500"}`}>
-                  {booking.isPaid ? "Paid" : "Unpaid"}
+                <p className={`text-sm ${
+                  booking.status === 'cancelled' ? 'text-gray-500' :
+                  booking.isPaid ? "text-green-500" : "text-red-500"
+                }`}>
+                  {booking.status === 'cancelled' ? 'Cancelled' :
+                   booking.isPaid ? "Paid" : "Unpaid"}
                 </p>
               </div>
-              {!booking.isPaid && (
-                <button onClick={()=>handlePayment(booking._id)} className="px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer">Pay Now</button>
+              {!booking.isPaid && booking.status !== 'cancelled' && (
+                <button 
+                  onClick={() => handlePayment(booking._id)} 
+                  className="px-4 py-1.5 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer"
+                >
+                  Pay Now
+                </button>
+              )}
+              {!booking.isPaid && booking.status !== 'cancelled' && (
+                <button 
+                  onClick={() => handleCancelBooking(booking._id)} 
+                  className="px-4 py-1.5 text-xs border border-red-400 text-red-500 rounded-full hover:bg-red-50 transition-all cursor-pointer"
+                >
+                  Cancel Booking
+                </button>
               )}
             </div>
           </div>

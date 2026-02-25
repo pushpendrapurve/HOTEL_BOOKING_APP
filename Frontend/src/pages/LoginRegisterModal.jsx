@@ -145,13 +145,13 @@ const LoginRegisterModal = () => {
         {/* Modal Content */}
         <div className="p-8">
           <h2 className="text-xl font-semibold text-center text-gray-800">
-            {isLogin ? "Sign in to QuickStay" : "Create your account"}
+            {isLogin ? "Sign in to StayHere" : "Create your account"}
           </h2>
 
           <p className="text-sm text-gray-500 text-center mt-1">
             {isLogin
               ? "Welcome back! Please sign in to continue"
-              : "Join QuickStay and start booking hotels easily"}
+              : "Join StayHere and start booking hotels easily"}
           </p>
 
           {/* Google Button UI */}

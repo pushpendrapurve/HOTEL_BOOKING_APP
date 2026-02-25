@@ -1,8 +1,18 @@
+import Hotel from "../models/Hotel.js";
+
 export const getUserData = async(req,res)=>{
     try {
        const role = req.user.role;
        const recentSearchedCities = req.user.recentSearchedCities;
-       res.json({sucess: true, role, recentSearchedCities})  
+       
+       // Check if user actually has a hotel (for hotelOwner role)
+       let hasHotel = false;
+       if (role === "hotelOwner") {
+         const hotel = await Hotel.findOne({ owner: req.user._id });
+         hasHotel = !!hotel;
+       }
+       
+       res.json({success: true, role, recentSearchedCities, hasHotel})  
     } catch (error) {
         res.json({success: false, message: error.message})
     }

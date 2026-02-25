@@ -8,6 +8,8 @@ import hotelRouter from "./routes/hotelRouter.js";
 import connectClodinary from "./configs/cloudinary.js";
 import roomRouter from "./routes/roomRouter.js";
 import bookingRouter from "./routes/bookingRouter.js";
+import reviewRouter from "./routes/reviewRouter.js";
+import newsletterRouter from "./routes/newsletterRouter.js";
 import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
 
 dotenv.config();
@@ -28,6 +30,8 @@ app.use("/api/user", userRouter);
 app.use("/api/hotels", hotelRouter);
 app.use("/api/rooms", roomRouter);
 app.use("/api/bookings", bookingRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/newsletter", newsletterRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

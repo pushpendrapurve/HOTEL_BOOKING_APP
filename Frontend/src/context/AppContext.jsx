@@ -6,10 +6,11 @@ import { toast } from "react-hot-toast";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
+
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const currency = import.meta.env.VITE_CURRENCY || $;
+  const currency = import.meta.env.VITE_CURRENCY || "₹";
   const navigate = useNavigate();
   const [user, setUser] = useState(
   JSON.parse(localStorage.getItem("user")) || null
@@ -31,9 +32,11 @@ export const AppProvider = ({ children }) => {
   );
 
   useEffect(() => {
+  // Only set isOwner based on localStorage initially, 
+  // fetchUser will update it with the correct value based on actual hotel ownership
   if (user?.role === "hotelOwner") {
-    setIsOwner(true);
-    localStorage.setItem("isOwner", "true");
+    // Don't automatically set to true, let fetchUser determine the correct value
+    // This prevents the issue where user shows as owner without having a hotel
   } else {
     setIsOwner(false);
     localStorage.setItem("isOwner", "false");
@@ -64,7 +67,10 @@ export const AppProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (data.success) {
-        setIsOwner(data.role === "hotelOwner");
+        // Only set isOwner to true if user has hotelOwner role AND actually has a hotel
+        const shouldBeOwner = data.role === "hotelOwner" && data.hasHotel;
+        setIsOwner(shouldBeOwner);
+        localStorage.setItem("isOwner", shouldBeOwner.toString());
         setSearchedCities(data.recentSearchedCities);
       } else {
         //Retry Fetching User Details after 5 seconds
@@ -87,6 +93,12 @@ export const AppProvider = ({ children }) => {
     fetchRooms();
   }, []);
 
+  const refreshOwnerStatus = async () => {
+    if (user && token) {
+      await fetchUser();
+    }
+  };
+
   const value = {
     currency,
     navigate,
@@ -102,7 +114,8 @@ export const AppProvider = ({ children }) => {
     setUser,
     rooms,
     setRooms,
-    toast
+    toast,
+    refreshOwnerStatus
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

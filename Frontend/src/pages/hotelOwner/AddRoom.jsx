@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 const AddRoom = () => {
 
-    const {axios, token} = useAppContext();
+    const {axios, token, user, navigate, isOwner} = useAppContext();
 
     const [images, setImages] = useState({
         1: null,
@@ -28,6 +28,14 @@ const AddRoom = () => {
     })
 
     const [loading, setLoading] = useState(false)
+
+    // Check authentication
+    React.useEffect(() => {
+        if (!user || !token || !isOwner) {
+            toast.error('Please login as hotel owner to access this page');
+            navigate('/login');
+        }
+    }, [user, token, isOwner, navigate]);
 
     const onSubmitHandler =async (e) =>{
         e.preventDefault();

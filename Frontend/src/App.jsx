@@ -22,7 +22,6 @@ const App = () => {
   const isOwnerPath = useLocation().pathname.includes("owner");
   const {showHotelReg} = useAppContext();
 
-
   return (
     <div>
       <Toaster />

@@ -5,7 +5,7 @@ import { useAppContext } from '../../context/AppContext'
 
 const Dashboard = () => {
 
-  const {currency, user, token, toast, axios} = useAppContext();
+  const {currency, user, token, toast, axios, navigate, isOwner} = useAppContext();
 
     const [dashboardData, setDashboardData] = useState({
       bookings: [],
@@ -32,6 +32,11 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
+     if (!user || !token || !isOwner) {
+       toast.error('Please login as hotel owner to access this page');
+       navigate('/login');
+       return;
+     }
      fetchDashboardData()
     }, [user])
     

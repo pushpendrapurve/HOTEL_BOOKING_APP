@@ -13,15 +13,23 @@ import newsletterRouter from "./routes/newsletterRouter.js";
 import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
 
 dotenv.config();
-connectDB();
-connectClodinary();
 
 const app = express();
 
-app.use(cors());
+// CORS configuration - Allow all origins
+app.use(cors({
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Increase payload size limit for image uploads
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.post('/api/stripe', express.raw({type: "application/json", limit: '50mb'}),stripeWebhooks)
+// Stripe webhook (must be before express.json())
+app.post('/api/stripe', express.raw({type: "application/json", limit: '50mb'}), stripeWebhooks);
 
 // Initialize connections (only once)
 let isConnected = false;
@@ -46,9 +54,7 @@ app.use(async (req, res, next) => {
 });
 
 // routes
-//login/register router
 app.use("/api/auth", authRoutes);
-
 app.use("/api/user", userRouter);
 app.use("/api/hotels", hotelRouter);
 app.use("/api/rooms", roomRouter);

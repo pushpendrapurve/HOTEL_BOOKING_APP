@@ -16,44 +16,30 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration - Allow all origins
-app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// CORS - Allow all
+app.use(cors());
 
-// Increase payload size limit for image uploads
+// Body parsers with size limits
+app.post('/api/stripe', express.raw({type: "application/json"}), stripeWebhooks);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Stripe webhook (must be before express.json())
-app.post('/api/stripe', express.raw({type: "application/json", limit: '50mb'}), stripeWebhooks);
-
-// Initialize connections (only once)
+// Initialize connections once
 let isConnected = false;
-
-const initializeConnections = async () => {
+app.use(async (req, res, next) => {
   if (!isConnected) {
     try {
       await connectDB();
       await connectClodinary();
       isConnected = true;
-      console.log('Connections initialized');
     } catch (error) {
-      console.error('Failed to initialize connections:', error);
+      console.error('Connection error:', error);
     }
   }
-};
-
-// Middleware to ensure connections are initialized
-app.use(async (req, res, next) => {
-  await initializeConnections();
   next();
 });
 
-// routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/hotels", hotelRouter);
@@ -66,11 +52,10 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// For local development
+// Local development only
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-// Export for Vercel
 export default app;

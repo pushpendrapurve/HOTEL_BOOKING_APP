@@ -109,10 +109,22 @@ export const getUserBookings = async (req, res) => {
   try {
     const user = req.user._id;
     const bookings = await Booking.find({ user })
-      .populate("room hotel")
+      .populate({
+        path: 'room',
+        select: 'roomType images pricePerNight'
+      })
+      .populate({
+        path: 'hotel',
+        select: 'name address'
+      })
       .sort({ createdAt: -1 });
-    res.json({ success: true, bookings });
+    
+    // Filter out bookings with deleted rooms/hotels
+    const validBookings = bookings.filter(booking => booking.room && booking.hotel);
+    
+    res.json({ success: true, bookings: validBookings });
   } catch (error) {
+    console.error('Error fetching user bookings:', error);
     res.json({ success: false, message: "Failed to fetch bookings" });
   }
 };

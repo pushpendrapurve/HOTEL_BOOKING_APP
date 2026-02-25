@@ -81,7 +81,13 @@ const MyBookings = () => {
           <div className="w-1/3">Payment</div>
         </div>
 
-        {bookings.map((booking) => (
+        {bookings.map((booking) => {
+          // Safety check - skip if room or hotel data is missing
+          if (!booking.room || !booking.hotel || !booking.room.images || booking.room.images.length === 0) {
+            return null;
+          }
+          
+          return (
           <div
             key={booking._id}
             className="grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t"
@@ -91,9 +97,9 @@ const MyBookings = () => {
               <img
                 src={booking.room.images[0]}
                 alt="hotel-img"
-                className="min-md:w-44 rounded shadow object-cover"
+                className="md:w-44 rounded shadow object-cover"
               />
-              <div className="flex flex-col gap-1.5 max-md:mt-3 min-md:ml-4">
+              <div className="flex flex-col gap-1.5 max-md:mt-3 md:ml-4">
                 <p className="font-playfair text-2xl">
                   {booking.hotel.name}
                   <span className="font-inter text-sm" >({booking.room.roomType})</span>
@@ -158,7 +164,7 @@ const MyBookings = () => {
               )}
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </div>
   );

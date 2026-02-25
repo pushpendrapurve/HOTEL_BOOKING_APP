@@ -33,9 +33,6 @@ app.use(cors(corsOptions));
 app.post('/api/stripe', express.raw({type: "application/json"}),stripeWebhooks)
 app.use(express.json());
 
-// Handle preflight requests
-app.options('*', cors(corsOptions));
-
 // Initialize connections (only once)
 let isConnected = false;
 

@@ -8,10 +8,18 @@ const ContactModal = ({ hotel, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    // Use owner's email instead of hotel contact (which is a phone number)
+    const ownerEmail = hotel.owner?.email;
+    
+    if (!ownerEmail) {
+      toast.error("Hotel owner email not available");
+      return;
+    }
+    
     // Create mailto link
     const subject = encodeURIComponent(`Inquiry about ${hotel.name}`);
     const body = encodeURIComponent(message);
-    const mailtoLink = `mailto:${hotel.contact}?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:${ownerEmail}?subject=${subject}&body=${body}`;
     
     window.location.href = mailtoLink;
     toast.success("Opening your email client...");

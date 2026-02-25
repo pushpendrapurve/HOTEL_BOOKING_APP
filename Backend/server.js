@@ -13,8 +13,6 @@ import newsletterRouter from "./routes/newsletterRouter.js";
 import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
 
 dotenv.config();
-connectDB();
-connectClodinary();
 
 const app = express();
 
@@ -38,6 +36,28 @@ app.use(express.json());
 // Handle preflight requests
 app.options('*', cors(corsOptions));
 
+// Initialize connections (only once)
+let isConnected = false;
+
+const initializeConnections = async () => {
+  if (!isConnected) {
+    try {
+      await connectDB();
+      await connectClodinary();
+      isConnected = true;
+      console.log('Connections initialized');
+    } catch (error) {
+      console.error('Failed to initialize connections:', error);
+    }
+  }
+};
+
+// Middleware to ensure connections are initialized
+app.use(async (req, res, next) => {
+  await initializeConnections();
+  next();
+});
+
 // routes
 //login/register router
 app.use("/api/auth", authRoutes);
@@ -53,6 +73,11 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-const PORT = process.env.PORT || 5000;
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Export for Vercel
+export default app;

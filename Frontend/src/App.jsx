@@ -8,6 +8,7 @@ import RoomDetails from './pages/RoomDetails';
 import MyBookings from './pages/MyBookings';
 import Profile from './pages/Profile';
 import FAQ from './pages/FAQ';
+import ForgotPassword from './pages/ForgotPassword';
 import HotelReg from './components/HotelReg';
 import Layout from './pages/hotelOwner/Layout';
 import Dashboard from './pages/hotelOwner/Dashboard';
@@ -37,6 +38,7 @@ const App = () => {
         <Route path='/my-bookings' element={<MyBookings/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/faq' element={<FAQ/>}/>
+        <Route path='/forgot-password' element={<ForgotPassword/>}/>
         <Route path='/loader/:nextUrl' element={<Loader/>}/>
         <Route path='/login' element={<LoginRegisterModal/>}/>
         <Route path='/register' element={<LoginRegisterModal/>}/>

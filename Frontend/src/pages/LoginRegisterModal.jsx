@@ -232,9 +232,18 @@ const LoginRegisterModal = () => {
 
             {/* Password */}
             <div className="mb-4">
-              <label className="text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                {isLogin && (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
 
               <div className="relative mt-1">
                 <input

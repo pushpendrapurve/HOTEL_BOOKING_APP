@@ -39,10 +39,12 @@ import totalBookingIcon from "./totalBookingIcon.svg";
 import totalRevenueIcon from "./totalRevenueIcon.svg";
 import ownerImage from "./ownerImage.png"
 import profile_images from "../assets/profile_image.jpg"
+import logo2 from "../assets/logo2.png"
 
 
 export const assets = {
     logo,
+    logo2,
     searchIcon,
     userIcon,
     calenderIcon,

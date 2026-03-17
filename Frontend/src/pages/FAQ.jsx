@@ -1,0 +1,207 @@
+import React, { useState } from "react";
+
+const faqs = [
+  {
+    category: "Bookings",
+    icon: "🗓️",
+    items: [
+      {
+        q: "How do I make a booking?",
+        a: "Browse available rooms, select your preferred dates and guests, then click 'Book Now'. You'll be guided through a secure checkout process. A confirmation email is sent instantly after payment.",
+      },
+      {
+        q: "Can I modify my booking after confirmation?",
+        a: "Yes. Head to 'My Bookings' from your profile menu. You can view booking details there. For changes to dates or room type, please contact the hotel directly using the contact info on your confirmation email.",
+      },
+      {
+        q: "How far in advance can I book?",
+        a: "You can book up to 12 months in advance. We recommend booking early for peak seasons and holidays to secure the best rates.",
+      },
+    ],
+  },
+  {
+    category: "Payments",
+    icon: "💳",
+    items: [
+      {
+        q: "What payment methods are accepted?",
+        a: "We accept all major credit and debit cards (Visa, Mastercard, Amex), UPI, and net banking — all processed securely through Stripe.",
+      },
+      {
+        q: "Is my payment information secure?",
+        a: "Absolutely. We never store your card details. All transactions are encrypted and handled by Stripe, a PCI-DSS Level 1 certified payment processor.",
+      },
+      {
+        q: "When will I be charged?",
+        a: "Your card is charged at the time of booking confirmation. You'll receive a payment receipt via email immediately after.",
+      },
+    ],
+  },
+  {
+    category: "Cancellations & Refunds",
+    icon: "↩️",
+    items: [
+      {
+        q: "What is the cancellation policy?",
+        a: "Cancellation policies vary by hotel and room type. The specific policy is displayed on the room details page before you confirm your booking.",
+      },
+      {
+        q: "How long do refunds take?",
+        a: "Approved refunds are processed within 5–7 business days back to your original payment method. You'll receive an email confirmation once the refund is initiated.",
+      },
+      {
+        q: "What if the hotel cancels my booking?",
+        a: "In the rare event a hotel cancels, you'll receive a full refund within 3 business days and our support team will help you find an alternative.",
+      },
+    ],
+  },
+  {
+    category: "Account & Profile",
+    icon: "👤",
+    items: [
+      {
+        q: "How do I update my profile?",
+        a: "Click your avatar in the top-right corner and select 'My Profile'. From there you can update your name, profile photo, and password.",
+      },
+      {
+        q: "I forgot my password. What do I do?",
+        a: "On the login page, click 'Forgot Password' and enter your registered email. You'll receive a reset link within a few minutes.",
+      },
+      {
+        q: "Can I have both a user and hotel owner account?",
+        a: "Your account can be upgraded to a hotel owner account by registering your hotel via 'List Your Hotel'. Both roles are managed under the same login.",
+      },
+    ],
+  },
+  {
+    category: "Hotel Owners",
+    icon: "🏨",
+    items: [
+      {
+        q: "How do I list my hotel?",
+        a: "After logging in, click 'List Your Hotel' in the navbar. Fill in your hotel details and submit. Once approved, you can start adding rooms from your owner dashboard.",
+      },
+      {
+        q: "How do I manage room availability?",
+        a: "In your owner dashboard under 'Room Listings', use the toggle switch next to each room to instantly enable or disable availability.",
+      },
+      {
+        q: "How are payouts handled?",
+        a: "Payouts are processed automatically after a guest's check-in date. Funds are transferred to your registered bank account within 3–5 business days.",
+      },
+    ],
+  },
+];
+
+const FAQItem = ({ q, a }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className={`border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ${open ? "shadow-md" : "hover:shadow-sm"}`}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
+      >
+        <span className={`text-sm font-medium pr-4 ${open ? "text-primary" : "text-gray-800"}`}>
+          {q}
+        </span>
+        <span
+          className={`text-xl text-gray-400 transition-transform duration-300 shrink-0 ${open ? "rotate-45 text-primary" : ""}`}
+        >
+          +
+        </span>
+      </button>
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${open ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}
+      >
+        <p className="px-5 pb-5 text-sm text-gray-500 leading-relaxed border-t border-gray-100 pt-3">
+          {a}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const FAQ = () => {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const allCategories = ["All", ...faqs.map((f) => f.category)];
+
+  const filtered = activeCategory === "All" ? faqs : faqs.filter((f) => f.category === activeCategory);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-br from-blue-600 to-blue-800 pt-32 pb-20 px-4 text-center relative overflow-hidden">
+        {/* decorative circles */}
+        <div className="absolute top-10 left-10 w-40 h-40 bg-white/5 rounded-full" />
+        <div className="absolute bottom-0 right-16 w-64 h-64 bg-white/5 rounded-full" />
+        <div className="absolute top-20 right-1/4 w-20 h-20 bg-white/5 rounded-full" />
+
+        <p className="text-blue-200 text-sm font-medium tracking-widest uppercase mb-3">Help Center</p>
+        <h1 className="font-playfair text-4xl md:text-5xl text-white font-semibold mb-4">
+          Frequently Asked Questions
+        </h1>
+        <p className="text-blue-100 text-base max-w-xl mx-auto">
+          Everything you need to know about booking, payments, and managing your stay.
+        </p>
+      </div>
+
+      {/* Category Filter */}
+      <div className="sticky top-16 z-10 bg-white border-b border-gray-100 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
+          {allCategories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                activeCategory === cat
+                  ? "bg-primary text-white shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* FAQ Sections */}
+      <div className="max-w-4xl mx-auto px-4 py-14 space-y-12">
+        {filtered.map((section) => (
+          <div key={section.category}>
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-5">
+              <span className="text-2xl">{section.icon}</span>
+              <h2 className="text-xl font-semibold text-gray-800 font-playfair">{section.category}</h2>
+              <div className="flex-1 h-px bg-gray-200 ml-2" />
+            </div>
+
+            <div className="space-y-3">
+              {section.items.map((item, i) => (
+                <FAQItem key={i} q={item.q} a={item.a} />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Still need help */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-8 text-center mt-10">
+          <p className="text-2xl mb-2">🤔</p>
+          <h3 className="text-lg font-semibold text-gray-800 mb-1">Still have questions?</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            Can't find what you're looking for? Our support team is happy to help.
+          </p>
+          <a
+            href="mailto:support@quickstay.com"
+            className="inline-block bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-blue-700 transition-all"
+          >
+            Contact Support
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FAQ;

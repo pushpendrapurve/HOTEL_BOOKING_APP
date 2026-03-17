@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
         default: "user"
     },
 
+    image: {
+        type: String,
+        default: ""
+    },
+
     recentSearchedCities :[{
         type: String,
         required: true 

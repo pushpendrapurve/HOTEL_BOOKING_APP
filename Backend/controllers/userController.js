@@ -1,4 +1,7 @@
 import Hotel from "../models/Hotel.js";
+import User from "../models/User.js";
+import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 
 export const getUserData = async(req,res)=>{
     try {
@@ -17,6 +20,49 @@ export const getUserData = async(req,res)=>{
         res.json({success: false, message: error.message})
     }
 }
+
+// GET /api/user/profile
+export const getProfile = async (req, res) => {
+  try {
+    const { name, email, role, image } = req.user;
+    res.json({ success: true, user: { name, email, role, image } });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// PUT /api/user/profile
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, currentPassword, newPassword } = req.body;
+    const user = req.user;
+
+    if (name) user.name = name;
+
+    // Handle profile image upload
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      user.image = result.secure_url;
+    }
+
+    // Handle password change
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.json({ success: false, message: "Current password is required" });
+      }
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.json({ success: false, message: "Current password is incorrect" });
+      }
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    await user.save();
+    res.json({ success: true, message: "Profile updated successfully", user: { name: user.name, email: user.email, role: user.role, image: user.image } });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
 
 //store user recent searched cities
 export const storeRecentSearchedCities = async(req,res)=>{

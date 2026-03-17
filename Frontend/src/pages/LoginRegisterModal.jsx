@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { assets } from "../assets/assets";
 
 const LoginRegisterModal = () => {
   const [showPass, setShowPass] = useState(false);
@@ -155,7 +156,7 @@ const LoginRegisterModal = () => {
           </p>
 
           {/* Google Button UI */}
-          <button
+          {/* <button
             type="button"
             className="mt-6 w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-2 hover:bg-gray-50 transition"
           >
@@ -167,12 +168,17 @@ const LoginRegisterModal = () => {
             <span className="text-sm font-medium text-gray-700">
               Continue with Google
             </span>
-          </button>
+          </button> */}
 
           {/* OR Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-[1px] bg-gray-200"></div>
-            <span className="text-xs text-gray-400">or</span>
+             <img 
+                      src={assets.logo2}
+                      alt="logo"
+                      className="h-25"
+
+             />
             <div className="flex-1 h-[1px] bg-gray-200"></div>
           </div>
 
@@ -226,9 +232,18 @@ const LoginRegisterModal = () => {
 
             {/* Password */}
             <div className="mb-4">
-              <label className="text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                {isLogin && (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
 
               <div className="relative mt-1">
                 <input

@@ -6,9 +6,9 @@ import { useAppContext } from "../context/AppContext";
 const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Hotel", path: "/rooms" },
-    { name: "Experience", path: "/" },
+    { name: "Hotels", path: "/rooms" },
     { name: "About", path: "/" },
+    { name: "FAQ", path: "/faq" },
   ];
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,9 +57,9 @@ const Navbar = () => {
       {/* Logo */}
       <Link to="/">
         <img
-          src={assets.logo}
+          src={assets.logo2}
           alt="logo"
-          className={`h-9 ${isScrolled && "invert opacity-80"}`}
+          className={`h-15 ${isScrolled && "invert opacity-80"}`}
         />
       </Link>
 
@@ -95,29 +95,35 @@ const Navbar = () => {
 
       {/* Desktop Right */}
       <div className="hidden md:flex items-center gap-4">
-        <img
-          src={assets.searchIcon}
-          alt="search"
-          className={`${isScrolled && "invert"} h-7 transition-all duration-500`}
-        />
-
+      
         {/* Login OR Avatar */}
         {user ? (
           <div className="relative group">
             {/* Avatar */}
             <div
-              className={`w-10 h-10 flex items-center justify-center rounded-full font-bold cursor-pointer ${
+              className={`w-10 h-10 flex items-center justify-center rounded-full font-bold cursor-pointer overflow-hidden ${
                 isScrolled ? "bg-black text-white" : "bg-white text-black"
               }`}
             >
-              {user.email?.charAt(0).toUpperCase()}
+              {user.image ? (
+                <img src={user.image} alt="avatar" className="w-full h-full object-cover" />
+              ) : (
+                user.email?.charAt(0).toUpperCase()
+              )}
             </div>
 
             {/* Dropdown */}
-            <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-xl opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transform translate-y-2 transition-all duration-300 overflow-hidden">
+            <div className="absolute right-0 mt-2 w-50 bg-white shadow-lg rounded-xl opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transform translate-y-2 transition-all duration-300 overflow-hidden">
               <p className="px-4 py-2 text-sm text-gray-600 border-b">
                 {user.email}
               </p>
+
+              <button
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => navigate("/profile")}
+              >
+                My Profile
+              </button>
 
               <button
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
@@ -150,11 +156,15 @@ const Navbar = () => {
       <div className="flex items-center gap-3 md:hidden">
         {user && (
           <div
-            className={`w-9 h-9 flex items-center justify-center rounded-full font-bold ${
+            className={`w-9 h-9 flex items-center justify-center rounded-full font-bold overflow-hidden ${
               isScrolled ? "bg-black text-white" : "bg-white text-black"
             }`}
           >
-            {user.email?.charAt(0).toUpperCase()}
+            {user.image ? (
+              <img src={user.image} alt="avatar" className="w-full h-full object-cover" />
+            ) : (
+              user.email?.charAt(0).toUpperCase()
+            )}
           </div>
         )}
 
@@ -202,6 +212,16 @@ const Navbar = () => {
         {/* Login OR Logout */}
         {user ? (
           <>
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                navigate("/profile");
+              }}
+              className="bg-gray-800 text-white px-8 py-2.5 rounded-full transition-all duration-500"
+            >
+              My Profile
+            </button>
+
             <button
               onClick={() => {
                 setIsMenuOpen(false);

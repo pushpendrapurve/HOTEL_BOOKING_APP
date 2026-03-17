@@ -283,7 +283,6 @@ const RoomDetails = () => {
           {/* Hosted by */}
         <div className="flex flex-col items-start gap-4 mb-10">
           <div className="flex gap-4">
-            <img src={room.hotel.owner.image} alt="Host" className="h-10 w-10 md:h-18 md:w-18 rounded-full"/>
             <div>
               <p className="text-lg md:text-xl">Hosted by {room.hotel.name}</p>
               <div className="flex items-center mt-1">

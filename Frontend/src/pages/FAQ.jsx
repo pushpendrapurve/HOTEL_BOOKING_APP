@@ -185,20 +185,6 @@ const FAQ = () => {
           </div>
         ))}
 
-        {/* Still need help */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-8 text-center mt-10">
-          <p className="text-2xl mb-2">🤔</p>
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">Still have questions?</h3>
-          <p className="text-sm text-gray-500 mb-5">
-            Can't find what you're looking for? Our support team is happy to help.
-          </p>
-          <a
-            href="mailto:support@quickstay.com"
-            className="inline-block bg-primary text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-blue-700 transition-all"
-          >
-            Contact Support
-          </a>
-        </div>
       </div>
     </div>
   );

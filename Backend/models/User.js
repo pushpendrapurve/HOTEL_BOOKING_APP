@@ -33,6 +33,16 @@ const userSchema = new mongoose.Schema(
         default: ""
     },
 
+    resetOtp: {
+        type: String,
+        default: ""
+    },
+
+    resetOtpExpiry: {
+        type: Number,
+        default: 0
+    },
+
     recentSearchedCities :[{
         type: String,
         required: true 

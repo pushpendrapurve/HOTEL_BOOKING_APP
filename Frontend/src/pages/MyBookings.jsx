@@ -5,7 +5,7 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 
 const MyBookings = () => {
-  const {axios,token,user} = useAppContext()
+  const {axios,token,user,navigate} = useAppContext()
   const [bookings, setBookings] = useState([]);
 
   const fetchUserBookings = async()=>{
@@ -93,7 +93,7 @@ const MyBookings = () => {
             className="grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 dark:border-gray-700 py-6 first:border-t"
           >
             {/* Hotel Details */}
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:flex-row cursor-pointer" onClick={() => { navigate(`/rooms/${booking.room._id}`); scrollTo(0, 0); }}>
               <img
                 src={booking.room.images[0]}
                 alt="hotel-img"

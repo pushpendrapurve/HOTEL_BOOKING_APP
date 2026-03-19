@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { assets } from "../assets/assets";
+import { assets, maxGuestsMap } from "../assets/assets";
 
 const HotelCard = ({ room, index }) => {
   return (
@@ -56,6 +56,9 @@ const HotelCard = ({ room, index }) => {
           <div>
             <span className="text-xl font-bold text-gray-800 dark:text-gray-100">₹{room.pricePerNight}</span>
             <span className="text-xs text-gray-400 dark:text-gray-500"> /night</span>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+              Up to {maxGuestsMap[room.roomType] || 2} guest{(maxGuestsMap[room.roomType] || 2) > 1 ? "s" : ""}
+            </p>
           </div>
           <span className="px-3.5 py-1.5 text-xs font-semibold bg-black dark:bg-primary text-white rounded-lg group-hover:bg-primary dark:group-hover:bg-primary/80 transition-colors duration-300 cursor-pointer">
             Book Now

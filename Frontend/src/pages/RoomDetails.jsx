@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { assets, facilityIcons, roomCommonData } from "../assets/assets";
+import { assets, facilityIcons, roomCommonData, maxGuestsMap } from "../assets/assets";
 import StarRating from "../components/StarRating";
 import ContactModal from "../components/ContactModal";
 import { useAppContext } from "../context/AppContext";
@@ -252,8 +252,20 @@ const RoomDetails = () => {
                   <div className='flex flex-col'>
                     <label htmlFor="guests" className="font-medium dark:text-gray-200">
                     Guests</label>
-                    <input onChange={(e)=>setGuests(e.target.value) } value={guests} type="number" id="guests" placeholder="1"
-                    className="max-w-20 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 mt-1.5 outline-none" required/>
+                    <input
+                      onChange={(e) => setGuests(Math.min(Number(e.target.value), maxGuestsMap[room.roomType] || 2))}
+                      value={guests}
+                      type="number"
+                      id="guests"
+                      placeholder="1"
+                      min={1}
+                      max={maxGuestsMap[room.roomType] || 2}
+                      className="max-w-20 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 mt-1.5 outline-none"
+                      required
+                    />
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                      Max {maxGuestsMap[room.roomType] || 2} guest{(maxGuestsMap[room.roomType] || 2) > 1 ? "s" : ""}
+                    </p>
                   </div>
               </div>
 

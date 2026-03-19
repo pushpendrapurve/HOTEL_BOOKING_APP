@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { assets, facilityIcons, roomsDummyData } from "../assets/assets";
+import { assets, facilityIcons, roomsDummyData, maxGuestsMap } from "../assets/assets";
 import { useSearchParams } from "react-router-dom";
 import StarRating from "../components/StarRating";
 import { useAppContext } from "../context/AppContext";
@@ -202,6 +202,10 @@ const AllRooms = () => {
               {/* Room Price per Night */}
               <p className="text-xl font-medium text-gray-700 dark:text-gray-200">
                 ₹{room.pricePerNight} /night
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                <img src={assets.guestsIcon} alt="guests" className="w-3.5 h-3.5 opacity-60" />
+                Up to {maxGuestsMap[room.roomType] || 2} guest{(maxGuestsMap[room.roomType] || 2) > 1 ? "s" : ""}
               </p>
             </div>
           </div>

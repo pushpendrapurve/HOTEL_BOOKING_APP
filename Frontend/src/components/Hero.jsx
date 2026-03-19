@@ -96,11 +96,11 @@ const Hero = () => {
                 <label htmlFor="guests">Guests</label>
                 <input 
                   min={1} 
-                  max={4} 
+                  max={5} 
                   id="guests" 
                   type="number" 
                   value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
+                  onChange={(e) => setGuests(Math.min(Math.max(1, Number(e.target.value)), 5))}
                   className=" rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none  max-w-16" 
                   placeholder="1" 
                 />

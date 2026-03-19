@@ -285,7 +285,13 @@ export const dashboardDummyData = {
     "bookings": userBookingsDummyData
 }
 
-// --------- SVG code for Book Icon------
+// Guest capacity per room type
+export const maxGuestsMap = {
+  "Single Bed":   1,
+  "Double Bed":   2,
+  "Luxury Bed":   2,
+  "Family Suite": 5,
+};
 /* 
 const BookIcon = ()=>(
     <svg className="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" >

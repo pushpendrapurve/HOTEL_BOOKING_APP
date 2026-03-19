@@ -65,9 +65,9 @@ const EditModal = ({ room, onClose, onSave, axios, token }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Edit Room</h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Edit Room</h2>
           <button onClick={onClose}>
             <img src={assets.closeIcon} alt="close" className="h-5 w-5 opacity-60 hover:opacity-100" />
           </button>
@@ -106,11 +106,11 @@ const EditModal = ({ room, onClose, onSave, axios, token }) => {
           {/* Room Type & Price */}
           <div className="flex gap-4 flex-wrap mb-4">
             <div className="flex-1 min-w-36">
-              <p className="text-sm text-gray-700 mb-1">Room Type</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">Room Type</p>
               <select
                 value={inputs.roomType}
                 onChange={(e) => setInputs({ ...inputs, roomType: e.target.value })}
-                className="border border-gray-300 rounded p-2 w-full text-sm"
+                className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded p-2 w-full text-sm"
               >
                 <option value="Single Bed">Single Bed</option>
                 <option value="Double Bed">Double Bed</option>
@@ -119,10 +119,10 @@ const EditModal = ({ room, onClose, onSave, axios, token }) => {
               </select>
             </div>
             <div>
-              <p className="text-sm text-gray-700 mb-1">Price <span className="text-xs">/night</span></p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">Price <span className="text-xs">/night</span></p>
               <input
                 type="number"
-                className="border border-gray-300 rounded p-2 w-24 text-sm"
+                className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded p-2 w-24 text-sm"
                 value={inputs.pricePerNight}
                 onChange={(e) => setInputs({ ...inputs, pricePerNight: e.target.value })}
               />
@@ -130,8 +130,8 @@ const EditModal = ({ room, onClose, onSave, axios, token }) => {
           </div>
 
           {/* Amenities */}
-          <p className="text-sm text-gray-700 mb-1">Amenities</p>
-          <div className="flex flex-col gap-1 mb-6 text-gray-500 text-sm">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">Amenities</p>
+          <div className="flex flex-col gap-1 mb-6 text-gray-500 dark:text-gray-400 text-sm">
             {AMENITIES_LIST.map((amenity, i) => (
               <label key={i} className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -248,28 +248,28 @@ const ListRoom = () => {
 
       <p className="text-gray-500 mt-8">All Rooms</p>
 
-      <div className="w-full max-w-3xl text-left border border-gray-300 rounded-lg max-h-80 overflow-y-scroll mt-3">
+      <div className="w-full max-w-3xl text-left border border-gray-300 dark:border-gray-700 rounded-lg max-h-80 overflow-y-scroll mt-3">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="py-3 px-4 text-gray-800 font-medium">Name</th>
-              <th className="py-3 px-4 text-gray-800 font-medium max-sm:hidden">Facility</th>
-              <th className="py-3 px-4 text-gray-800 font-medium">Price / night</th>
-              <th className="py-3 px-4 text-gray-800 font-medium text-center">Available</th>
-              <th className="py-3 px-4 text-gray-800 font-medium text-center">Manage</th>
+              <th className="py-3 px-4 text-gray-800 dark:text-gray-200 font-medium">Name</th>
+              <th className="py-3 px-4 text-gray-800 dark:text-gray-200 font-medium max-sm:hidden">Facility</th>
+              <th className="py-3 px-4 text-gray-800 dark:text-gray-200 font-medium">Price / night</th>
+              <th className="py-3 px-4 text-gray-800 dark:text-gray-200 font-medium text-center">Available</th>
+              <th className="py-3 px-4 text-gray-800 dark:text-gray-200 font-medium text-center">Manage</th>
             </tr>
           </thead>
           <tbody className="text-sm">
             {rooms.map((item, index) => (
               <tr key={index}>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300">{item.roomType}</td>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300 max-sm:hidden">
+                <td className="py-3 px-4 text-gray-700 dark:text-gray-300 border-t border-gray-300 dark:border-gray-700">{item.roomType}</td>
+                <td className="py-3 px-4 text-gray-700 dark:text-gray-300 border-t border-gray-300 dark:border-gray-700 max-sm:hidden">
                   {item.amenities.join(", ")}
                 </td>
-                <td className="py-3 px-4 text-gray-700 border-t border-gray-300">
+                <td className="py-3 px-4 text-gray-700 dark:text-gray-300 border-t border-gray-300 dark:border-gray-700">
                   {currency} {item.pricePerNight}
                 </td>
-                <td className="py-3 px-4 border-t border-gray-300 text-center">
+                <td className="py-3 px-4 border-t border-gray-300 dark:border-gray-700 text-center">
                   <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
                     <input
                       onChange={() => toggleAvailability(item._id)}
@@ -281,7 +281,7 @@ const ListRoom = () => {
                     <span className="dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
                   </label>
                 </td>
-                <td className="py-3 px-4 border-t border-gray-300 text-center">
+                <td className="py-3 px-4 border-t border-gray-300 dark:border-gray-700 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={() => setEditingRoom(item)}

@@ -134,7 +134,7 @@ const LoginRegisterModal = () => {
       ></div>
 
       {/* Modal Box */}
-      <div className="relative w-[95%] max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+      <div className="relative w-[95%] max-w-md rounded-2xl bg-white dark:bg-gray-800 shadow-2xl overflow-hidden">
         {/* Close Button */}
         <button
           className="absolute right-3 top-3 rounded-lg border border-gray-300 p-1 hover:bg-gray-100 transition"
@@ -145,11 +145,11 @@ const LoginRegisterModal = () => {
 
         {/* Modal Content */}
         <div className="p-8">
-          <h2 className="text-xl font-semibold text-center text-gray-800">
+          <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-100">
             {isLogin ? "Sign in to StayHere" : "Create your account"}
           </h2>
 
-          <p className="text-sm text-gray-500 text-center mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">
             {isLogin
               ? "Welcome back! Please sign in to continue"
               : "Join StayHere and start booking hotels easily"}
@@ -201,7 +201,7 @@ const LoginRegisterModal = () => {
             {/* Full Name */}
             {!isLogin && (
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Full Name
                 </label>
                 <input
@@ -210,14 +210,14 @@ const LoginRegisterModal = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Pushpendra Purve"
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
             )}
 
             {/* Email */}
             <div className="mb-4">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Email address
               </label>
               <input
@@ -226,14 +226,14 @@ const LoginRegisterModal = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="pushpendra@example.com"
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
 
             {/* Password */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1">
-                <label className="text-sm font-medium text-gray-700">Password</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                 {isLogin && (
                   <button
                     type="button"
@@ -252,7 +252,7 @@ const LoginRegisterModal = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter password"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
 
                 <button
@@ -268,7 +268,7 @@ const LoginRegisterModal = () => {
             {/* Confirm Password */}
             {!isLogin && (
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Confirm Password
                 </label>
                 <input
@@ -277,7 +277,7 @@ const LoginRegisterModal = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="Confirm password"
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
             )}
@@ -301,10 +301,10 @@ const LoginRegisterModal = () => {
           </form>
 
           {/* Switch */}
-          <p className="text-sm text-gray-500 text-center mt-5">
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-5">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
-              className="text-gray-800 font-semibold hover:underline"
+              className="text-gray-800 dark:text-gray-200 font-semibold hover:underline"
               onClick={() => navigate(isLogin ? "/register" : "/login")}
             >
               {isLogin ? "Sign up" : "Sign in"}
@@ -312,8 +312,7 @@ const LoginRegisterModal = () => {
           </p>
         </div>
 
-        {/* Footer */}
-        <div className="bg-gray-50 py-3 text-center text-xs text-gray-500">
+        <div className="bg-gray-50 dark:bg-gray-700 py-3 text-center text-xs text-gray-500 dark:text-gray-400">
           Secured by <span className="font-semibold">QuickStay</span>
         </div>
       </div>

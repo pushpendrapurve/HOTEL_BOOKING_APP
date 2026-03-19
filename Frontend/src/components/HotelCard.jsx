@@ -8,7 +8,7 @@ const HotelCard = ({ room, index }) => {
       to={"/rooms/" + room._id}
       onClick={() => scrollTo(0, 0)}
       key={room.id}
-      className="relative max-w-70 w-full rounded-xl overflow-hidden bg-white text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.05)]"
+      className="relative max-w-70 w-full rounded-xl overflow-hidden bg-white dark:bg-gray-800 text-gray-500/90 dark:text-gray-400 shadow-[0px_4px_4px_rgba(0,0,0,0.05)]"
      >
       <img
         src={room.images[0]}
@@ -24,7 +24,7 @@ const HotelCard = ({ room, index }) => {
 
       <div className="p-4 pt-5">
         <div className="flex items-center justify-between">
-          <p className="font-playfair text-xl font-medium text-grey-800">
+          <p className="font-playfair text-xl font-medium text-grey-800 dark:text-gray-100">
             {room.hotel.name}
           </p>
           <div className="flex item-center gap-1">
@@ -36,8 +36,8 @@ const HotelCard = ({ room, index }) => {
             <span>{room.hotel.address}</span>
         </div>
         <div className="flex items-center justify-between mt-4">
-            <p><span className="text-xl text-gray-800">₹{room.pricePerNight}</span>/night</p>
-            <button className="px-4 py-2 text-sm font-medium border border-gray-300 rounded hover:bg-gray-50 transition-all cursor-pointer">Book Now</button>
+            <p><span className="text-xl text-gray-800 dark:text-gray-100">₹{room.pricePerNight}</span>/night</p>
+            <button className="px-4 py-2 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-all cursor-pointer">Book Now</button>
         </div>
       </div>
     </Link>

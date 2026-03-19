@@ -19,7 +19,7 @@ const RecommendedHotels = () => {
   },[rooms, searchedCities])
 
   return recommended.length > 0 && (
-    <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20'>
+    <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 dark:bg-gray-800 py-20'>
 
        <Title title='Recommended Hotels' subTitle='Discover our handpicked selection of exeptional properties around the world, offering unparalleled luxury and unforgettable experiences.' />
 

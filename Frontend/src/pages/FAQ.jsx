@@ -97,13 +97,13 @@ const FAQItem = ({ q, a }) => {
   const [open, setOpen] = useState(false);
   return (
     <div
-      className={`border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ${open ? "shadow-md" : "hover:shadow-sm"}`}
+      className={`border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-300 ${open ? "shadow-md" : "hover:shadow-sm"}`}
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
-        <span className={`text-sm font-medium pr-4 ${open ? "text-primary" : "text-gray-800"}`}>
+        <span className={`text-sm font-medium pr-4 ${open ? "text-primary" : "text-gray-800 dark:text-gray-100"}`}>
           {q}
         </span>
         <span
@@ -115,7 +115,7 @@ const FAQItem = ({ q, a }) => {
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden ${open ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}
       >
-        <p className="px-5 pb-5 text-sm text-gray-500 leading-relaxed border-t border-gray-100 pt-3">
+        <p className="px-5 pb-5 text-sm text-gray-500 dark:text-gray-400 leading-relaxed border-t border-gray-100 dark:border-gray-700 pt-3">
           {a}
         </p>
       </div>
@@ -130,7 +130,7 @@ const FAQ = () => {
   const filtered = activeCategory === "All" ? faqs : faqs.filter((f) => f.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-blue-600 to-blue-800 pt-32 pb-20 px-4 text-center relative overflow-hidden">
         {/* decorative circles */}
@@ -148,7 +148,7 @@ const FAQ = () => {
       </div>
 
       {/* Category Filter */}
-      <div className="sticky top-16 z-10 bg-white border-b border-gray-100 shadow-sm">
+      <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
           {allCategories.map((cat) => (
             <button
@@ -157,7 +157,7 @@ const FAQ = () => {
               className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeCategory === cat
                   ? "bg-primary text-white shadow-sm"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
               }`}
             >
               {cat}

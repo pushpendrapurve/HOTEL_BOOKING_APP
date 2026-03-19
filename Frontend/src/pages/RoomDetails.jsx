@@ -195,7 +195,7 @@ const RoomDetails = () => {
               {room.amenities.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700"
                 >
                   <img
                     src={facilityIcons[item]}
@@ -213,10 +213,10 @@ const RoomDetails = () => {
         </div>
 
         {/* CheckIn CheckOut Form */}
-        <form onSubmit={onSumitHandler} className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
+        <form onSubmit={onSumitHandler} className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white dark:bg-gray-800 shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
 
           {!user && (
-            <div className="w-full p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+            <div className="w-full p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg text-center">
               <div className="text-yellow-800 mb-3">
                 <span className="text-2xl">🔒</span>
                 <p className="text-lg font-medium mt-2">Login Required</p>
@@ -236,24 +236,24 @@ const RoomDetails = () => {
             <>
               <div className="flex flex-col flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-gray-500">
                   <div className='flex flex-col'>
-                    <label htmlFor="checkInDate" className="font-medium">
+                    <label htmlFor="checkInDate" className="font-medium dark:text-gray-200">
                     Check-In</label>
                     <input onChange={(e)=>setCheckInDate(e.target.value) } min={new Date().toISOString().split('T')[0]} type="date" id="checkInDate" placeholder="Check-In"
-                    className="w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none" required/>
+                    className="w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 mt-1.5 outline-none" required/>
                   </div>
                   <div className="w-px h-15 bg-gray-300/70 max-md:hidden"></div>
                   <div className='flex flex-col'>
-                    <label htmlFor="checkOutDate" className="font-medium">
+                    <label htmlFor="checkOutDate" className="font-medium dark:text-gray-200">
                     Check-Out</label>
                     <input onChange={(e)=>setCheckOutDate(e.target.value) } min={checkInDate} disabled={!checkInDate} type="date" id="checkOutDate" placeholder="Check-Out"
-                    className="w-full rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none" required/>
+                    className="w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 mt-1.5 outline-none" required/>
                   </div>
                   <div className="w-px h-15 bg-gray-300/70 max-md:hidden"></div>
                   <div className='flex flex-col'>
-                    <label htmlFor="guests" className="font-medium">
+                    <label htmlFor="guests" className="font-medium dark:text-gray-200">
                     Guests</label>
                     <input onChange={(e)=>setGuests(e.target.value) } value={guests} type="number" id="guests" placeholder="1"
-                    className="max-w-20 rounded border border-gray-300 px-3 py-2 mt-1.5 outline-none" required/>
+                    className="max-w-20 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 mt-1.5 outline-none" required/>
                   </div>
               </div>
 
@@ -276,7 +276,7 @@ const RoomDetails = () => {
           ))}
         </div>
 
-        <div className="max-w-3xl border-y border-gray-300 my-15 py-10 text-gray-500">
+        <div className="max-w-3xl border-y border-gray-300 dark:border-gray-700 my-15 py-10 text-gray-500 dark:text-gray-400">
           <p>Guests will be allocated on the ground floor according to availability. You get a comfortable Two bedroom apartment has a true city feeling. The price quoted is for two guest, at the guest slot please mark the number of guests to get the exact price for groups. The Guests will be allocated ground floor according to availability. You get the comfortable two bedroom apartment that has a true city feeling.</p>
         </div>
 
@@ -323,9 +323,9 @@ const RoomDetails = () => {
 
           {/* Review Form */}
           {showReviewForm && (
-            <form onSubmit={handleSubmitReview} className="bg-gray-50 p-6 rounded-lg mb-6">
+            <form onSubmit={handleSubmitReview} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6">
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Rating</label>
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Rating</label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -340,11 +340,11 @@ const RoomDetails = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Your Review</label>
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Your Review</label>
                 <textarea
                   value={newReview.comment}
                   onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                  className="w-full border border-gray-300 rounded p-3 outline-none"
+                  className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded p-3 outline-none"
                   rows="4"
                   placeholder="Share your experience..."
                   required
@@ -363,28 +363,28 @@ const RoomDetails = () => {
           <div className="space-y-6">
             {reviews.length > 0 ? (
               reviews.map((review) => (
-                <div key={review._id} className="border-b border-gray-200 pb-6 last:border-0">
+                <div key={review._id} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="w-12 h-12 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-white font-semibold">
                       {review.user?.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium">{review.user?.name || 'Anonymous'}</h3>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                           {new Date(review.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="flex items-center mt-1">
                         <StarRating rating={review.rating} />
                       </div>
-                      <p className="text-gray-600 mt-2">{review.comment}</p>
+                      <p className="text-gray-600 dark:text-gray-400 mt-2">{review.comment}</p>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center py-8">No reviews yet. Be the first to review!</p>
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">No reviews yet. Be the first to review!</p>
             )}
           </div>
         </div>

@@ -28,7 +28,7 @@ const ContactModal = ({ hotel, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full p-6 relative">
+      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6 relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
@@ -36,23 +36,23 @@ const ContactModal = ({ hotel, onClose }) => {
           <img src={assets.closeIcon} alt="close" className="w-6 h-6" />
         </button>
 
-        <h2 className="text-2xl font-playfair mb-4">Contact {hotel.name}</h2>
+        <h2 className="text-2xl font-playfair mb-4 dark:text-gray-100">Contact {hotel.name}</h2>
         
         <div className="mb-4">
-          <p className="text-gray-600 text-sm mb-2">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
             <span className="font-medium">Address:</span> {hotel.address}
           </p>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
             <span className="font-medium">Contact:</span> {hotel.contact}
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <label className="block text-gray-700 mb-2">Your Message</label>
+          <label className="block text-gray-700 dark:text-gray-300 mb-2">Your Message</label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full border border-gray-300 rounded p-3 outline-none"
+            className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded p-3 outline-none"
             rows="5"
             placeholder="Write your message here..."
             required

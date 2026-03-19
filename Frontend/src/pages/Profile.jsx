@@ -105,9 +105,9 @@ const Profile = () => {
   const avatarSrc = imagePreview || profile.image || null;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-16 px-4">
-      <div className="max-w-lg mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">My Profile</h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 pb-16 px-4">
+      <div className="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-1">My Profile</h1>
         <p className="text-sm text-gray-400 mb-8">Manage your account details</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -133,9 +133,9 @@ const Profile = () => {
               <input type="file" id="profileImage" accept="image/*" hidden onChange={handleImageChange} />
             </div>
             <div>
-              <p className="font-medium text-gray-800">{profile.name}</p>
+              <p className="font-medium text-gray-800 dark:text-gray-100">{profile.name}</p>
               <p className="text-sm text-gray-400">{profile.email}</p>
-              <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full capitalize">
+              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full capitalize">
                 {profile.role === "hotelOwner" ? "Hotel Owner" : "User"}
               </span>
             </div>
@@ -143,62 +143,62 @@ const Profile = () => {
 
           {/* Name */}
           <div>
-            <label className="text-sm text-gray-600 block mb-1">Full Name</label>
+            <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">Full Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
               placeholder="Your name"
             />
           </div>
 
           {/* Email (read-only) */}
           <div>
-            <label className="text-sm text-gray-600 block mb-1">Email</label>
+            <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">Email</label>
             <input
               type="email"
               value={profile.email}
               disabled
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
             />
           </div>
 
-          <hr className="border-gray-100" />
-          <p className="text-sm font-medium text-gray-700">Change Password <span className="text-xs text-gray-400 font-normal">(leave blank to keep current)</span></p>
+          <hr className="border-gray-100 dark:border-gray-700" />
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Change Password <span className="text-xs text-gray-400 font-normal">(leave blank to keep current)</span></p>
 
           {/* Current Password */}
           <div>
-            <label className="text-sm text-gray-600 block mb-1">Current Password</label>
+            <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">Current Password</label>
             <input
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
               placeholder="••••••••"
             />
           </div>
 
           {/* New Password */}
           <div>
-            <label className="text-sm text-gray-600 block mb-1">New Password</label>
+            <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">New Password</label>
             <input
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
               placeholder="••••••••"
             />
           </div>
 
           {/* Confirm Password */}
           <div>
-            <label className="text-sm text-gray-600 block mb-1">Confirm New Password</label>
+            <label className="text-sm text-gray-600 dark:text-gray-300 block mb-1">Confirm New Password</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
               placeholder="••••••••"
             />
           </div>

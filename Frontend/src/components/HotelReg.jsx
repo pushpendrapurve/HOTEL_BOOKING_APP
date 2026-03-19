@@ -30,7 +30,7 @@ const HotelReg = () => {
 
   return (
     <div onClick={()=>setShowHotelReg(false)} className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center justify-center bg-black/70">
-      <form onSubmit={onSubmitHandler} onClick={(e)=> e.stopPropagation()} className="flex bg-white rounded-xl max-w-4xl max-md:mx-2">
+      <form onSubmit={onSubmitHandler} onClick={(e)=> e.stopPropagation()} className="flex bg-white dark:bg-gray-800 rounded-xl max-w-4xl max-md:mx-2">
         <img
           src={assets.regImage}
           alt="reg-image"
@@ -48,7 +48,7 @@ const HotelReg = () => {
 
           {/* Hotel Name */}
           <div className="w-full mt-4">
-            <label htmlFor="name" className="font-medium text-gray-500">
+            <label htmlFor="name" className="font-medium text-gray-500 dark:text-gray-400">
               Hotel Name
             </label>
             <input
@@ -57,14 +57,14 @@ const HotelReg = () => {
               id="name"
               onChange={(e)=>setName(e.target.value)}
               value={name}
-              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />
           </div>
 
           {/* Phone */}
           <div className="w-full mt-4">
-            <label htmlFor="contact" className="font-medium text-gray-500">
+            <label htmlFor="contact" className="font-medium text-gray-500 dark:text-gray-400">
               Phone
             </label>
             <input
@@ -73,14 +73,14 @@ const HotelReg = () => {
               value={contact}
               type="text"
               placeholder="Type here"
-              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />
           </div>
 
           {/* Address */}
           <div className="w-full mt-4">
-            <label htmlFor="Address" className="font-medium text-gray-500">
+            <label htmlFor="Address" className="font-medium text-gray-500 dark:text-gray-400">
               Address
             </label>
             <input
@@ -89,7 +89,7 @@ const HotelReg = () => {
               value={address}
               type="text"
               placeholder="Type here"
-              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />
           </div>
@@ -101,7 +101,7 @@ const HotelReg = () => {
               id="city"
               onChange={(e)=>setCity(e.target.value)}
               value={city}
-              className="border border-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light text-black"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light text-black dark:text-gray-200"
               required
             >
               <option value="">Select City</option>

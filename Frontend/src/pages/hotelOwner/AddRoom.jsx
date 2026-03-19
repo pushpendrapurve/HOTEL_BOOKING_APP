@@ -175,11 +175,11 @@ const AddRoom = () => {
 
     <div className='w-full flex max-sm:flex-col sm:gap-4 mt-4'>
         <div className='flex-1 max-w-48'>
-            <p className='text-gray-800 mt-4'>Room Type</p>
+            <p className='text-gray-800 dark:text-gray-200 mt-4'>Room Type</p>
             <select
             value={inputs.roomType}
             onChange={e=> setInputs({...inputs, roomType: e.target.value})}
-            className='border opacity-70 border-gray-70 border-gray-300 mt-1 rounded p-2 w-full'>
+            className='border opacity-70 border-gray-70 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 mt-1 rounded p-2 w-full'>
             <option value="">Select Room Type</option>
             <option value="Single Bed">Single Bed</option>
             <option value="Double Bed">Double Bed</option>
@@ -189,8 +189,8 @@ const AddRoom = () => {
         </div>
 
         <div>
-            <p className='mt-4 text-gray-800'>Price <span className='text-xs'>/night</span></p>
-            <input type="number" placeholder='0' className='border border-gray-300 mt-1 rounded p-2 w-24' value={inputs.pricePerNight} onChange={e=>setInputs({...inputs, pricePerNight: e.target.value})}/>
+            <p className='mt-4 text-gray-800 dark:text-gray-200'>Price <span className='text-xs'>/night</span></p>
+            <input type="number" placeholder='0' className='border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 mt-1 rounded p-2 w-24' value={inputs.pricePerNight} onChange={e=>setInputs({...inputs, pricePerNight: e.target.value})}/>
         </div>
     </div>
 

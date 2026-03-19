@@ -149,13 +149,13 @@ const AllRooms = () => {
           >
             Hotels in India
           </h1>
-          <p className="text-sm md:text-base text-gray-500/90 mt-2">
+          <p className="text-sm md:text-base text-gray-500/90 dark:text-gray-400 mt-2">
             Discover amazing hotels across India's most beautiful destinations. From heritage palaces to modern luxury resorts, find your perfect stay.
           </p>
         </div>
 
         {filteredRooms.map((room) => (
-          <div className="flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 last:border-0">
+          <div className="flex flex-col md:flex-row items-start py-10 gap-6 border-b border-gray-300 dark:border-gray-700 last:border-0">
             <img
               onClick={() => {
                 (navigate(`/rooms/${room._id}`), scrollTo(0, 0));
@@ -166,12 +166,12 @@ const AllRooms = () => {
               className="max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer "
             />
             <div className="md:w-1/2 flex flex-col gap-2">
-              <p className="text-gray-500">{room.hotel.city}</p>
+              <p className="text-gray-500 dark:text-gray-400">{room.hotel.city}</p>
               <p
                 onClick={() => {
                   (navigate(`/rooms/${room._id}`), scrollTo(0, 0));
                 }}
-                className="text-gray-800 text-3xl font-playfair cursor-pointer"
+                className="text-gray-800 dark:text-gray-100 text-3xl font-playfair cursor-pointer"
               >
                 {room.hotel.name}
               </p>
@@ -179,7 +179,7 @@ const AllRooms = () => {
                 <StarRating rating={4} />
                 <p className="ml-2">Reviews</p>
               </div>
-              <div className="flex items-center gap-1 text-gray-500 mt-2 text-sm">
+              <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 mt-2 text-sm">
                 <img src={assets.locationIcon} alt="location-Icon" />
                 <span>{room.hotel.address}</span>
               </div>
@@ -188,7 +188,7 @@ const AllRooms = () => {
                 {room.amenities.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F5FF]/70"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F5FF]/70 dark:bg-gray-700"
                   >
                     <img
                       src={facilityIcons[item]}
@@ -200,7 +200,7 @@ const AllRooms = () => {
                 ))}
               </div>
               {/* Room Price per Night */}
-              <p className="text-xl font-medium text-gray-700">
+              <p className="text-xl font-medium text-gray-700 dark:text-gray-200">
                 ₹{room.pricePerNight} /night
               </p>
             </div>
@@ -208,11 +208,11 @@ const AllRooms = () => {
         ))}
       </div>
       {/* Filters */}
-      <div className="bg-white w-80 border border-gray-300 text-gray-600 max-lg:mb-8 min-lg:mt-16">
+      <div className="bg-white dark:bg-gray-800 w-80 border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 max-lg:mb-8 min-lg:mt-16">
         <div
-          className={`flex items-center justify-between px-5 py-2.5 min-lg:border-b border-gray-300 ${openFilters && "border-b"}`}
+          className={`flex items-center justify-between px-5 py-2.5 min-lg:border-b border-gray-300 dark:border-gray-700 ${openFilters && "border-b"}`}
         >
-          <p className="text-base font-medium text-gray-800">FILTERS</p>
+          <p className="text-base font-medium text-gray-800 dark:text-gray-100">FILTERS</p>
           <div className="text-xs cursor-pointer">
             <span
               onClick={() => setOpenFilters(!openFilters)}
@@ -228,21 +228,21 @@ const AllRooms = () => {
           className={`${openFilters ? "h-auto" : "h-0 lg:h-auto"} overflow-hidden transition-all duration-700`}
         >
           <div className="px-5 pt-5">
-            <p className="font-medium text-gray-800 pb-2">Popular filters</p>
+            <p className="font-medium text-gray-800 dark:text-gray-100 pb-2">Popular filters</p>
             {roomTypes.map((room, index) => (
               <CheckBox key={index} label={room} selected={selectedFilters.roomType.includes(room)} onChange={(checked)=>hadleFilterChange(checked, room, 'roomType')} />
             ))}
           </div>
 
           <div className="px-5 pt-5">
-            <p className="font-medium text-gray-800 pb-2">Price Range</p>
+            <p className="font-medium text-gray-800 dark:text-gray-100 pb-2">Price Range</p>
             {priceRanges.map((range, index) => (
               <CheckBox key={index} label={`${currency} ${range}`} selected={selectedFilters.priceRange.includes(range)} onChange={(checked)=>hadleFilterChange(checked, range, 'priceRange')}/>
             ))}
           </div>
 
           <div className="px-5 pt-5 pb-7">
-            <p className="font-medium text-gray-800 pb-2">Sort By</p>
+            <p className="font-medium text-gray-800 dark:text-gray-100 pb-2">Sort By</p>
             {sortOptions.map((option, index) => (
               <RadioButton key={index} label={option} selected={selectedSort === option} onChange={()=> handleSortChange(option)}/>
             ))}

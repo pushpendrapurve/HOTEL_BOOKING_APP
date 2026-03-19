@@ -86,7 +86,7 @@ const ForgotPassword = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => navigate("/login")} />
 
-      <div className="relative w-[95%] max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+      <div className="relative w-[95%] max-w-md rounded-2xl bg-white dark:bg-gray-800 shadow-2xl overflow-hidden">
         <div className="p-8">
           <div className="flex justify-center mb-5">
             <img src={assets.logo2} alt="logo" className="h-10 invert opacity-80" />
@@ -107,19 +107,19 @@ const ForgotPassword = () => {
 
           ) : step === 1 ? (
             <>
-              <h2 className="text-xl font-semibold text-center text-gray-800">Forgot your password?</h2>
-              <p className="text-sm text-gray-500 text-center mt-1 mb-6">
+              <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-100">Forgot your password?</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1 mb-6">
                 Enter your email and we'll send you a 6-digit OTP.
               </p>
               {error && <p className="bg-red-50 text-red-600 text-sm px-3 py-2 rounded-lg mb-4 text-center border border-red-100">{error}</p>}
               <form onSubmit={handleSendOtp}>
-                <label className="text-sm font-medium text-gray-700 block mb-1">Email address</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">Email address</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-5"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 mb-5"
                 />
                 <button
                   type="submit"
@@ -133,9 +133,9 @@ const ForgotPassword = () => {
 
           ) : (
             <>
-              <h2 className="text-xl font-semibold text-center text-gray-800">Enter OTP</h2>
-              <p className="text-sm text-gray-500 text-center mt-1 mb-6">
-                We sent a 6-digit code to <span className="font-medium text-gray-700">{email}</span>
+              <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-100">Enter OTP</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1 mb-6">
+                We sent a 6-digit code to <span className="font-medium text-gray-700 dark:text-gray-300">{email}</span>
               </p>
               {error && <p className="bg-red-50 text-red-600 text-sm px-3 py-2 rounded-lg mb-4 text-center border border-red-100">{error}</p>}
 
@@ -151,20 +151,20 @@ const ForgotPassword = () => {
                       value={digit}
                       onChange={(e) => handleOtpChange(e.target.value, idx)}
                       onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                      className="w-11 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
+                      className="w-11 h-12 text-center text-lg font-semibold border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition"
                     />
                   ))}
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1">New Password</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">New Password</label>
                   <div className="relative">
                     <input
                       type={showPass ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     />
                     <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                       {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -173,13 +173,13 @@ const ForgotPassword = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1">Confirm Password</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">Confirm Password</label>
                   <input
                     type="password"
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                   />
                 </div>
 
@@ -206,16 +206,16 @@ const ForgotPassword = () => {
           )}
 
           {!success && (
-            <p className="text-sm text-gray-500 text-center mt-5">
+            <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-5">
               Remember your password?{" "}
-              <button onClick={() => navigate("/login")} className="text-gray-800 font-semibold hover:underline">
+              <button onClick={() => navigate("/login")} className="text-gray-800 dark:text-gray-200 font-semibold hover:underline">
                 Sign in
               </button>
             </p>
           )}
         </div>
 
-        <div className="bg-gray-50 py-3 text-center text-xs text-gray-500">
+        <div className="bg-gray-50 dark:bg-gray-700 py-3 text-center text-xs text-gray-500 dark:text-gray-400">
           Secured by <span className="font-semibold">QuickStay</span>
         </div>
       </div>

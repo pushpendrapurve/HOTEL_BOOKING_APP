@@ -49,6 +49,22 @@ export const AppProvider = ({ children }) => {
   const [searchedCities, setSearchedCities] = useState([]);
   const [rooms, setRooms] = useState([]);
 
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const stored = localStorage.getItem("darkMode");
+    return stored ? stored === "true" : false;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", isDarkMode);
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
+
   const fetchRooms = async () => {
     try {
       const { data } = await axios.get("/api/rooms");
@@ -118,7 +134,9 @@ export const AppProvider = ({ children }) => {
     rooms,
     setRooms,
     toast,
-    refreshOwnerStatus
+    refreshOwnerStatus,
+    isDarkMode,
+    toggleDarkMode,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

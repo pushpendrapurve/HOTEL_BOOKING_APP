@@ -2,14 +2,12 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #2563EB;
   --color-secondary: #FBBF24;
 }
-/* 
-*{
-  font-family: Outfit;
-} */
 
 .font-playfair{
   font-family: Playfair !important;

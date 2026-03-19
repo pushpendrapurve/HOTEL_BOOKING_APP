@@ -66,7 +66,7 @@ const Dashboard = () => {
            
         {/* total revenue */}
         <h2 className='text-xl text-blue-950/70 font-medium mb-5'>Recent Bookings</h2>
-          <div className='w-full max-w-3xl text-left border border-gray-300 dark:border-gray-700 rounded-lg max-h-80 overflow-y-scroll'>
+          <div className='w-full max-w-3xl text-left border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden mt-3'>
             <table className='w-full'>
                 <thead className='bg-gray-50 dark:bg-gray-800'>
                     <tr>

@@ -22,9 +22,9 @@ const Layout = () => {
   return (
     <div className='flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100'>
       <Navbar/>
-      <div className='flex h-full'>
+      <div className='flex flex-1 overflow-hidden'>
         <Sidebar/>
-        <div className='flex-1 p-4 pt-10 md:px-10 h-full overflow-y-auto'>
+        <div className='flex-1 p-4 pt-10 md:px-10 overflow-y-auto'>
           <Outlet/>  
         </div>
       </div>

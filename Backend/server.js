@@ -10,6 +10,7 @@ import roomRouter from "./routes/roomRouter.js";
 import bookingRouter from "./routes/bookingRouter.js";
 import reviewRouter from "./routes/reviewRouter.js";
 import newsletterRouter from "./routes/newsletterRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use("/api/rooms", roomRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/newsletter", newsletterRouter);
+app.use("/api/admin", adminRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

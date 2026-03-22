@@ -108,9 +108,9 @@ export const forgotPassword = async (req, res) => {
     await user.save();
 
     const mailOptions = {
-      from: `"QuickStay" <${process.env.SENDER_EMAIL}>`,
+      from: `"StayHere" <${process.env.SENDER_EMAIL}>`,
       to: user.email,
-      subject: "Your QuickStay Password Reset OTP",
+      subject: "Your StayHere Password Reset OTP",
       text: `Your OTP for password reset is: ${otp}\n\nThis OTP is valid for 15 minutes.\n\nIf you did not request this, please ignore this email.`,
     };
 

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const faqs = [
   {
@@ -125,9 +127,30 @@ const FAQItem = ({ q, a }) => {
 
 const FAQ = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { axios } = useAppContext();
   const allCategories = ["All", ...faqs.map((f) => f.category)];
-
   const filtered = activeCategory === "All" ? faqs : faqs.filter((f) => f.category === activeCategory);
+
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [sending, setSending] = useState(false);
+
+  const handleContact = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+      const { data } = await axios.post("/api/admin/contact", form);
+      if (data.success) {
+        toast.success("Message sent! We'll get back to you soon.");
+        setForm({ name: "", email: "", subject: "", message: "" });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err?.message || "Failed to send message");
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -173,8 +196,8 @@ const FAQ = () => {
             {/* Section Header */}
             <div className="flex items-center gap-3 mb-5">
               <span className="text-2xl">{section.icon}</span>
-              <h2 className="text-xl font-semibold text-gray-800 font-playfair">{section.category}</h2>
-              <div className="flex-1 h-px bg-gray-200 ml-2" />
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 font-playfair">{section.category}</h2>
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700 ml-2" />
             </div>
 
             <div className="space-y-3">
@@ -184,6 +207,71 @@ const FAQ = () => {
             </div>
           </div>
         ))}
+
+        {/* Contact Form */}
+        <div className="mt-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 shadow-sm">
+          <div className="text-center mb-8">
+            <span className="text-3xl">💬</span>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 font-playfair mt-2">Still have questions?</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Send us a message and we'll get back to you within 24 hours.</p>
+          </div>
+
+          <form onSubmit={handleContact} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1.5">Your Name</label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="John Doe"
+                required
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1.5">Email Address</label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="you@example.com"
+                required
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-colors"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1.5">Subject</label>
+              <input
+                type="text"
+                value={form.subject}
+                onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                placeholder="What's this about?"
+                required
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-colors"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1.5">Message</label>
+              <textarea
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                placeholder="Describe your issue or question in detail..."
+                required
+                rows={4}
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-blue-400 transition-colors resize-none"
+              />
+            </div>
+            <div className="md:col-span-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={sending}
+                className="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-medium rounded-xl transition-colors"
+              >
+                {sending ? "Sending..." : "Send Message →"}
+              </button>
+            </div>
+          </form>
+        </div>
 
       </div>
     </div>

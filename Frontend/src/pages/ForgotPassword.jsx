@@ -216,7 +216,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="bg-gray-50 dark:bg-gray-700 py-3 text-center text-xs text-gray-500 dark:text-gray-400">
-          Secured by <span className="font-semibold">QuickStay</span>
+          Secured by <span className="font-semibold">StayHere</span>
         </div>
       </div>
     </div>

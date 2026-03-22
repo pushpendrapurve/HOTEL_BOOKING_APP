@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const {user,setUser, navigate, isOwner, setShowHotelReg, isDarkMode, toggleDarkMode} = useAppContext();
+  const {user,setUser, navigate, isOwner, setShowHotelReg, isDarkMode, toggleDarkMode, hasPendingHotel} = useAppContext();
   
   const location = useLocation();
 
@@ -42,6 +42,8 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("isOwner");
+    localStorage.removeItem("hotelApproved");
+    localStorage.removeItem("hasPendingHotel");
     setUser(null);
     navigate("/");
   };
@@ -85,10 +87,13 @@ const Navbar = () => {
         {user && (<button
           className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
             isScrolled ? "text-black dark:text-gray-200 dark:border-gray-400" : "text-white"
-          } transition-all`}
-          onClick={() => isOwner? navigate("/owner") : setShowHotelReg(true)}
+          } transition-all ${hasPendingHotel ? "opacity-70 cursor-default" : ""}`}
+          onClick={() => {
+            if (hasPendingHotel) return;
+            isOwner ? navigate("/owner") : setShowHotelReg(true);
+          }}
         >
-         {isOwner? "Dashboard" : "List Your Hotel"}
+          {isOwner ? "Dashboard" : hasPendingHotel ? "⏳ Approval Pending" : "List Your Hotel"}
         </button>)}
 
       </div>
@@ -240,13 +245,13 @@ const Navbar = () => {
         ))}
 
         <button
-          className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all"
+          className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all ${hasPendingHotel ? "opacity-70 cursor-default" : ""}`}
           onClick={() => {
-            // setIsMenuOpen(false);
-           isOwner? navigate("/owner") : setShowHotelReg(true)
+            if (hasPendingHotel) return;
+            isOwner ? navigate("/owner") : setShowHotelReg(true);
           }}
         >
-           {isOwner? "Dashboard" : "List Your Hotel"}
+          {isOwner ? "Dashboard" : hasPendingHotel ? "⏳ Approval Pending" : "List Your Hotel"}
         </button>
 
         {/* Login OR Logout */}

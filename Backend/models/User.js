@@ -43,6 +43,21 @@ const userSchema = new mongoose.Schema(
         default: 0
     },
 
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    verifyOtp: {
+        type: String,
+        default: ""
+    },
+
+    verifyOtpExpiry: {
+        type: Number,
+        default: 0
+    },
+
     recentSearchedCities :[{
         type: String,
         required: true 

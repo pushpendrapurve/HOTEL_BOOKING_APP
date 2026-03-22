@@ -52,17 +52,21 @@ export const createRoom = async(req,res)=>{
 }
 
 //API to get all rooms
-export const getRooms =async(req,res)=>{
+export const getRooms = async(req,res)=>{
   try {
    const rooms = await Room.find({isAvailable: true}).populate({
     path: 'hotel',
+    match: { isApproved: true },
     populate:{
         path: 'owner',
         select: 'name email image'
     }
    }).sort({createdAt: -1})
 
-   res.json({success: true,rooms})
+   // Filter out rooms whose hotel didn't match (unapproved)
+   const approvedRooms = rooms.filter(room => room.hotel !== null);
+
+   res.json({success: true, rooms: approvedRooms})
   } catch (error) { 
    res.json({success: false,message: error.message})
   }

@@ -69,10 +69,13 @@ const HotelReg = () => {
             </label>
             <input
               id="contact"
-              onChange={(e)=>setContact(e.target.value)}
+              onChange={(e) => setContact(e.target.value.replace(/\D/g, "").slice(0, 10))}
               value={contact}
               type="text"
-              placeholder="Type here"
+              placeholder="10-digit mobile number"
+              maxLength={10}
+              pattern="\d{10}"
+              title="Enter a valid 10-digit phone number"
               className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded w-full px-3 py-2.5 mt-1 outline-indigo-500 font-light"
               required
             />

@@ -122,8 +122,13 @@ export const getAllOwners = async (req, res) => {
     const owners = await User.find({ role: "hotelOwner" }).select("-password").sort({ createdAt: -1 });
     const ownersWithHotels = await Promise.all(
       owners.map(async (owner) => {
-        const hotel = await Hotel.findOne({ owner: owner._id });
-        return { ...owner.toObject(), hotel };
+        const hotel = await Hotel.findOne({
+          $or: [
+            { owner: owner._id },
+            { owner: owner._id.toString() },
+          ]
+        });
+        return { ...owner.toObject(), hotel: hotel || null };
       })
     );
     res.json({ success: true, owners: ownersWithHotels });
@@ -196,6 +201,18 @@ export const deleteUser = async (req, res) => {
 // DELETE /api/admin/hotels/:id
 export const deleteHotel = async (req, res) => {
   try {
+    const hotel = await Hotel.findById(req.params.id);
+    if (!hotel) return res.json({ success: false, message: "Hotel not found" });
+
+    // Downgrade owner back to regular user using string-safe query
+    await User.findOneAndUpdate(
+      { _id: hotel.owner.toString() },
+      { role: "user" }
+    );
+
+    // Delete all rooms belonging to this hotel
+    await Room.deleteMany({ hotel: req.params.id });
+
     await Hotel.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: "Hotel deleted" });
   } catch (error) {
@@ -290,6 +307,38 @@ export const deleteContact = async (req, res) => {
   try {
     await Contact.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: "Message deleted" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// PATCH /api/admin/hotels/:id/approve
+export const approveHotel = async (req, res) => {
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, { isApproved: true }, { new: true });
+    if (!hotel) return res.json({ success: false, message: "Hotel not found" });
+    // Upgrade owner role to hotelOwner
+    await User.findOneAndUpdate(
+      { _id: hotel.owner.toString() },
+      { role: "hotelOwner" }
+    );
+    res.json({ success: true, message: "Hotel approved" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// PATCH /api/admin/hotels/:id/reject
+export const rejectHotel = async (req, res) => {
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, { isApproved: false }, { new: true });
+    if (!hotel) return res.json({ success: false, message: "Hotel not found" });
+    // Downgrade owner back to user
+    await User.findOneAndUpdate(
+      { _id: hotel.owner.toString() },
+      { role: "user" }
+    );
+    res.json({ success: true, message: "Hotel rejected" });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }

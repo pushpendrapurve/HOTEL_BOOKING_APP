@@ -10,12 +10,19 @@ export const getUserData = async(req,res)=>{
        
        // Check if user actually has a hotel (for hotelOwner role)
        let hasHotel = false;
-       if (role === "hotelOwner") {
-         const hotel = await Hotel.findOne({ owner: req.user._id });
-         hasHotel = !!hotel;
+       let hotelApproved = false;
+       let hasPendingHotel = false;
+       // Check for any hotel (approved or not) for this user
+       const hotel = await Hotel.findOne({
+         $or: [{ owner: req.user._id }, { owner: req.user._id.toString() }]
+       });
+       if (hotel) {
+         hasHotel = true;
+         hotelApproved = hotel.isApproved === true;
+         hasPendingHotel = hotel.isApproved === false;
        }
        
-       res.json({success: true, role, recentSearchedCities, hasHotel})  
+       res.json({success: true, role, recentSearchedCities, hasHotel, hotelApproved, hasPendingHotel})  
     } catch (error) {
         res.json({success: false, message: error.message})
     }

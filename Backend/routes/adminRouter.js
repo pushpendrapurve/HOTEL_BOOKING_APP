@@ -4,6 +4,7 @@ import {
   getAllUsers, getAllOwners, getAllHotels, getAllRooms,
   getAllBookings, getNewsletterSubscribers, deleteUser, deleteHotel,
   submitContact, getAllContacts, markContactRead, deleteContact,
+  approveHotel, rejectHotel,
 } from "../controllers/adminController.js";
 import { protectAdmin } from "../middleware/adminMiddleware.js";
 
@@ -25,5 +26,7 @@ adminRouter.patch("/contacts/:id/read", protectAdmin, markContactRead);
 adminRouter.delete("/contacts/:id", protectAdmin, deleteContact);
 adminRouter.delete("/users/:id", protectAdmin, deleteUser);
 adminRouter.delete("/hotels/:id", protectAdmin, deleteHotel);
+adminRouter.patch("/hotels/:id/approve", protectAdmin, approveHotel);
+adminRouter.patch("/hotels/:id/reject", protectAdmin, rejectHotel);
 
 export default adminRouter;

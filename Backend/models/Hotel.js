@@ -14,13 +14,17 @@ const hotelSchema = new mongoose.Schema({
         required: true
     },
     owner:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
     city:{
         type: String,
         required: true
+    },
+    isApproved:{
+        type: Boolean,
+        default: false
     },
 },{timestamps: true});
 

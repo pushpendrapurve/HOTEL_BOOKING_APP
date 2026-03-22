@@ -31,18 +31,14 @@ export const AppProvider = ({ children }) => {
   const [isOwner, setIsOwner] = useState(
   localStorage.getItem("isOwner") === "true"
   );
+  const [hotelApproved, setHotelApproved] = useState(
+    localStorage.getItem("hotelApproved") === "true"
+  );
+  const [hasPendingHotel, setHasPendingHotel] = useState(
+    localStorage.getItem("hasPendingHotel") === "true"
+  );
 
-  useEffect(() => {
-  // Only set isOwner based on localStorage initially, 
-  // fetchUser will update it with the correct value based on actual hotel ownership
-  if (user?.role === "hotelOwner") {
-    // Don't automatically set to true, let fetchUser determine the correct value
-    // This prevents the issue where user shows as owner without having a hotel
-  } else {
-    setIsOwner(false);
-    localStorage.setItem("isOwner", "false");
-  }
-}, [user]);
+  // fetchUser will always set the correct isOwner value — no need to reset here
 
 
   const [showHotelReg, setShowHotelReg] = useState(false);
@@ -86,10 +82,14 @@ export const AppProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (data.success) {
-        // Only set isOwner to true if user has hotelOwner role AND actually has a hotel
-        const shouldBeOwner = data.role === "hotelOwner" && data.hasHotel;
+        // isOwner = has a hotel (approved or not) with hotelOwner role, OR has approved hotel
+        const shouldBeOwner = (data.role === "hotelOwner" && data.hasHotel) || data.hotelApproved;
         setIsOwner(shouldBeOwner);
         localStorage.setItem("isOwner", shouldBeOwner.toString());
+        setHotelApproved(data.hotelApproved === true);
+        localStorage.setItem("hotelApproved", (data.hotelApproved === true).toString());
+        setHasPendingHotel(data.hasPendingHotel === true);
+        localStorage.setItem("hasPendingHotel", (data.hasPendingHotel === true).toString());
         setSearchedCities(data.recentSearchedCities);
       } else {
         //Retry Fetching User Details after 5 seconds
@@ -123,6 +123,8 @@ export const AppProvider = ({ children }) => {
     navigate,
     isOwner,
     setIsOwner,
+    hotelApproved,
+    hasPendingHotel,
     axios,
     token,
     showHotelReg,

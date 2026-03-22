@@ -6,12 +6,12 @@ import { assets } from "../assets/assets";
 const LoginRegisterModal = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [otpStep, setOtpStep] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [otp, setOtp] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: "", email: "", password: "", confirmPassword: "",
   });
 
   const [message, setMessage] = useState("");
@@ -19,109 +19,103 @@ const LoginRegisterModal = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const isLogin = location.pathname === "/login";
 
-  const handleClose = () => {
-    navigate("/");
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleClose = () => navigate("/");
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); setError("");
 
-    setMessage("");
-    setError("");
-
-    // Validation
-    if (!formData.email || !formData.password) {
-      setError("Email and Password are required.");
-      return;
-    }
-
+    if (!formData.email || !formData.password) { setError("Email and Password are required."); return; }
     if (!isLogin) {
-      if (!formData.name) {
-        setError("Full Name is required.");
-        return;
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match.");
-        return;
-      }
+      if (!formData.name) { setError("Full Name is required."); return; }
+      if (formData.password !== formData.confirmPassword) { setError("Passwords do not match."); return; }
     }
 
     try {
       setLoading(true);
-
       const url = isLogin
         ? `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`
         : `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`;
 
       const payload = isLogin
-        ? {
-            email: formData.email,
-            password: formData.password,
-          }
-        : {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-          };
+        ? { email: formData.email, password: formData.password }
+        : { name: formData.name, email: formData.email, password: formData.password };
 
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.message || "Something went wrong!");
+      if (!res.ok) { setError(data.message || "Something went wrong!"); setLoading(false); return; }
+
+      if (!isLogin && data.success) {
+        // Show OTP verification step after register
+        setPendingEmail(formData.email);
+        setOtpStep(true);
+        setMessage("OTP sent to your email. Please verify.");
         setLoading(false);
         return;
       }
 
-      // Store Token + User in LocalStorage
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
+      // Login success
+      if (data.token) localStorage.setItem("token", data.token);
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        if (data.user.role === "hotelOwner") {
-          localStorage.setItem("isOwner", "true");
-        } else {
-          localStorage.setItem("isOwner", "false");
-        }
+        localStorage.setItem("isOwner", data.user.role === "hotelOwner" ? "true" : "false");
       }
-
-      setMessage(data.message || "Success!");
-
-      // Clear form
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-
       setLoading(false);
-
-      // Redirect immediately
       navigate("/");
-
-      //Navbar refresh (temporary solution)
       window.location.reload();
     } catch (err) {
-      console.log(err);
       setError("Server error! Please try again.");
       setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError(""); setMessage("");
+    if (!otp || otp.length !== 6) { setError("Enter the 6-digit OTP."); return; }
+    try {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: pendingEmail, otp }),
+      });
+      const data = await res.json();
+      if (!data.success) { setError(data.message); setLoading(false); return; }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("isOwner", "false");
+      setLoading(false);
+      navigate("/");
+      window.location.reload();
+    } catch {
+      setError("Server error! Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setError(""); setMessage("");
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/resend-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: pendingEmail }),
+      });
+      const data = await res.json();
+      if (data.success) setMessage("New OTP sent to your email.");
+      else setError(data.message);
+    } catch {
+      setError("Failed to resend OTP.");
     }
   };
 
@@ -182,134 +176,102 @@ const LoginRegisterModal = () => {
             <div className="flex-1 h-[1px] bg-gray-200"></div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <p className="bg-red-100 text-red-700 text-sm p-2 rounded-lg mb-3 text-center">
-              {error}
-            </p>
-          )}
+          {/* Error / Success */}
+          {error && <p className="bg-red-100 text-red-700 text-sm p-2 rounded-lg mb-3 text-center">{error}</p>}
+          {message && <p className="bg-green-100 text-green-700 text-sm p-2 rounded-lg mb-3 text-center">{message}</p>}
 
-          {/* Success Message */}
-          {message && (
-            <p className="bg-green-100 text-green-700 text-sm p-2 rounded-lg mb-3 text-center">
-              {message}
-            </p>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit}>
-            {/* Full Name */}
-            {!isLogin && (
+          {/* OTP Step */}
+          {otpStep ? (
+            <form onSubmit={handleVerifyOtp}>
+              <div className="text-center mb-5">
+                <div className="text-4xl mb-2">📧</div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  We sent a 6-digit OTP to <span className="font-semibold text-gray-800 dark:text-gray-200">{pendingEmail}</span>
+                </p>
+              </div>
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Full Name
-                </label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Enter OTP</label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Pushpendra Purve"
-                  className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  maxLength={6}
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                  placeholder="• • • • • •"
+                  className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2.5 text-center text-xl tracking-[0.5em] font-bold focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
-            )}
-
-            {/* Email */}
-            <div className="mb-4">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email address
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="pushpendra@example.com"
-                className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-              />
-            </div>
-
-            {/* Password */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                {isLogin && (
-                  <button
-                    type="button"
-                    onClick={() => navigate("/forgot-password")}
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </button>
-                )}
-              </div>
-
-              <div className="relative mt-1">
-                <input
-                  type={showPass ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                />
-
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  onClick={() => setShowPass(!showPass)}
-                >
-                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+              <button type="submit" disabled={loading}
+                className="w-full py-2 rounded-lg font-medium text-sm bg-linear-to-r from-gray-800 to-gray-600 text-white hover:opacity-90 disabled:opacity-60 transition">
+                {loading ? "Verifying..." : "Verify & Continue →"}
+              </button>
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+                Didn't receive it?{" "}
+                <button type="button" onClick={handleResendOtp} className="text-gray-800 dark:text-gray-200 font-semibold hover:underline">
+                  Resend OTP
                 </button>
-              </div>
-            </div>
+              </p>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleChange}
+                      placeholder="Pushpendra Purve"
+                      className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400" />
+                  </div>
+                )}
 
-            {/* Confirm Password */}
-            {!isLogin && (
-              <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm password"
-                  className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
-                />
-              </div>
-            )}
+                <div className="mb-4">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange}
+                    placeholder="pushpendra@example.com"
+                    className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400" />
+                </div>
 
-            {/* Continue Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className={`mt-2 w-full py-2 rounded-lg font-medium text-sm transition ${
-                loading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-gradient-to-r from-gray-800 to-gray-600 text-white hover:opacity-90"
-              }`}
-            >
-              {loading
-                ? "Please wait..."
-                : isLogin
-                  ? "Continue →"
-                  : "Register →"}
-            </button>
-          </form>
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    {isLogin && (
+                      <button type="button" onClick={() => navigate("/forgot-password")} className="text-xs text-primary hover:underline">
+                        Forgot password?
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative mt-1">
+                    <input type={showPass ? "text" : "password"} name="password" value={formData.password} onChange={handleChange}
+                      placeholder="Enter password"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-gray-400" />
+                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700" onClick={() => setShowPass(!showPass)}>
+                      {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                </div>
 
-          {/* Switch */}
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-5">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button
-              className="text-gray-800 dark:text-gray-200 font-semibold hover:underline"
-              onClick={() => navigate(isLogin ? "/register" : "/login")}
-            >
-              {isLogin ? "Sign up" : "Sign in"}
-            </button>
-          </p>
+                {!isLogin && (
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                    <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange}
+                      placeholder="Confirm password"
+                      className="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400" />
+                  </div>
+                )}
+
+                <button type="submit" disabled={loading}
+                  className={`mt-2 w-full py-2 rounded-lg font-medium text-sm transition ${loading ? "bg-gray-400 text-white cursor-not-allowed" : "bg-linear-to-r from-gray-800 to-gray-600 text-white hover:opacity-90"}`}>
+                  {loading ? "Please wait..." : isLogin ? "Continue →" : "Register →"}
+                </button>
+              </form>
+
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-5">
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                <button className="text-gray-800 dark:text-gray-200 font-semibold hover:underline" onClick={() => navigate(isLogin ? "/register" : "/login")}>
+                  {isLogin ? "Sign up" : "Sign in"}
+                </button>
+              </p>
+            </>
+          )}
         </div>
 
         <div className="bg-gray-50 dark:bg-gray-700 py-3 text-center text-xs text-gray-500 dark:text-gray-400">

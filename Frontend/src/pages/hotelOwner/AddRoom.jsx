@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 const AddRoom = () => {
 
-    const {axios, token, user, navigate, isOwner} = useAppContext();
+    const {axios, token, user, navigate, isOwner, fetchRooms} = useAppContext();
 
     const [images, setImages] = useState({
         1: null,
@@ -136,6 +136,9 @@ const AddRoom = () => {
                     }
                 })
                 setImages({1: null, 2: null, 3: null, 4: null})
+                // Refresh global rooms list and go to listing page
+                await fetchRooms()
+                navigate('/owner/list-room')
             }else{
                toast.error(data.message) 
             }

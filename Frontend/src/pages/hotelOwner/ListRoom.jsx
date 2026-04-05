@@ -174,7 +174,7 @@ const EditModal = ({ room, onClose, onSave, axios, token }) => {
 const ListRoom = () => {
   const [rooms, setRooms] = useState([]);
   const [editingRoom, setEditingRoom] = useState(null);
-  const { axios, token, user, currency, navigate, isOwner } = useAppContext();
+  const { axios, token, user, currency, navigate, isOwner, fetchRooms } = useAppContext();
 
   useEffect(() => {
     if (!user || !token || !isOwner) {
@@ -183,7 +183,7 @@ const ListRoom = () => {
     }
   }, [user, token, isOwner, navigate]);
 
-  const fetchRooms = async () => {
+  const fetchOwnerRooms = async () => {
     try {
       const { data } = await axios.get("/api/rooms/owner", {
         headers: { Authorization: `Bearer ${token}` },
@@ -206,10 +206,12 @@ const ListRoom = () => {
     );
     if (data.success) {
       toast.success(data.message);
-      // Flip availability in local state instantly
+      // Flip in local state instantly
       setRooms((prev) =>
         prev.map((r) => r._id === roomId ? { ...r, isAvailable: !r.isAvailable } : r)
       );
+      // Sync global rooms so customer pages reflect the change
+      fetchRooms();
     } else {
       toast.error(data.message);
     }
@@ -234,7 +236,7 @@ const ListRoom = () => {
   };
 
   useEffect(() => {
-    if (user) fetchRooms();
+    if (user) fetchOwnerRooms();
   }, [user]);
 
   return (

@@ -135,6 +135,7 @@ export const AppProvider = ({ children }) => {
     setUser,
     rooms,
     setRooms,
+    fetchRooms,
     toast,
     refreshOwnerStatus,
     isDarkMode,
